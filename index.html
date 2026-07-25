@@ -1,7 +1,240 @@
-Mi Bot de WhatsApp
-  
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maruchan Bot - Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-bg: #1e293b;
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+    }
 
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-  
-    🤖 ¡Mi Bot de WhatsApp!
-    Bienvenido al sitio oficial. Muy pronto aquí verás los comandos y el panel web.
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      padding-bottom: 40px;
+    }
+
+    /* Navbar */
+    nav {
+      background-color: #0b1120;
+      border-bottom: 1px solid var(--border);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 40px 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1rem;
+      margin-bottom: 20px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(34, 197, 94, 0.1);
+      color: #22c55e;
+      border: 1px solid #22c55e;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #22c55e;
+      border-radius: 50%;
+    }
+
+    /* Contenedor Principal */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Sección de Búsqueda */
+    .search-box {
+      margin: 20px 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background-color: var(--card-bg);
+      color: white;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .search-box input:focus {
+      border-color: var(--accent);
+    }
+
+    /* Grid de Comandos */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      color: var(--accent);
+      font-weight: bold;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-desc {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .tag {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 0.75rem;
+      background: var(--border);
+      padding: 3px 8px;
+      border-radius: 4px;
+      color: var(--text-main);
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">
+      <i class="fa-solid fa-robot"></i> Maruchan Bot
+    </div>
+    <div class="status-badge">
+      <span class="status-dot"></span> Bot Activo
+    </div>
+  </nav>
+
+  <section class="hero">
+    <h1>Panel Oficial de Comandos</h1>
+    <p>Explora la lista completa de funciones disponibles para tus grupos de WhatsApp.</p>
+  </section>
+
+  <div class="container">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="🔍 Buscar un comando (ej: minecraft, papa, admin)..." onkeyup="filterCommands()">
+    </div>
+
+    <div class="grid" id="commandGrid">
+      
+      <!-- Comando 1 -->
+      <div class="card" data-name="minecraft rpg minar">
+        <div class="card-title"><i class="fa-solid fa-pickaxe"></i> RPG Minecraft</div>
+        <div class="card-desc">Explora el mundo RPG, mina recursos, craftea ítems y sube de nivel con tu perfil.</div>
+        <span class="tag">Juegos / RPG</span>
+      </div>
+
+      <!-- Comando 2 -->
+      <div class="card" data-name="papa se quema juego">
+        <div class="card-title"><i class="fa-solid fa-fire"></i> La Papa Se Quema</div>
+        <div class="card-desc">Juego dinámico para grupos. Pasa la papa caliente antes de que explote en el chat.</div>
+        <span class="tag">Juegos</span>
+      </div>
+
+      <!-- Comando 3 -->
+      <div class="card" data-name="card perfil discord avatar">
+        <div class="card-title"><i class="fa-solid fa-id-card"></i> Card de Perfil</div>
+        <div class="card-desc">Genera una tarjeta gráfica estilo Discord centrada con tu foto e información.</div>
+        <span class="tag">Herramientas</span>
+      </div>
+
+      <!-- Comando 4 -->
+      <div class="card" data-name="admin grupos kick ban enlace">
+        <div class="card-title"><i class="fa-solid fa-shield-halved"></i> Gestión de Grupos</div>
+        <div class="card-desc">Herramientas avanzadas de administración para moderar usuarios e invitaciones.</div>
+        <span class="tag">Administración</span>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function filterCommands() {
+      const input = document.getElementById('searchInput').value.toLowerCase();
+      const cards = document.querySelectorAll('.card');
+
+      cards.forEach(card => {
+        const name = card.getAttribute('data-name').toLowerCase();
+        if (name.includes(input)) {
+          card.style.display = "block";
+        } else {
+          card.style.display = "none";
+        }
+      });
+    }
+  </script>
+
+</body>
+  </html>
