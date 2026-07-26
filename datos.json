@@ -1,7 +1,8 @@
 {
   "botName": "Maruchan Bot",
   "status": "online",
-  "uptime": "10m 1s",
-  "lastUpdate": "26/7/2026, 17:12:17",
-  "version": "v1.0"
+  "uptime": "6s",
+  "lastUpdate": "26/7/2026, 17:16:52",
+  "version": "v1.0",
+  "groups": []
 }
