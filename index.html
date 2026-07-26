@@ -1,263 +1,421 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maruchan Bot - Dashboard</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    :root {
-      --bg-dark: #0f172a;
-      --card-bg: #1e293b;
-      --accent: #6366f1;
-      --accent-hover: #4f46e5;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --border: #334155;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maruchan Bot — Panel Oficial Miku</title>
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --miku-primary: #00f2fe;
+            --miku-secondary: #4facfe;
+            --miku-dark: #0d1117;
+            --miku-card: #161b22;
+            --miku-card-hover: #1f2937;
+            --miku-text: #f0f6fc;
+            --miku-subtext: #8b949e;
+            --miku-accent: #39d353;
+        }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
 
-    body {
-      background-color: var(--bg-dark);
-      color: var(--text-main);
-      padding-bottom: 40px;
-    }
+        body {
+            background-color: var(--miku-dark);
+            color: var(--miku-text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-    /* Navbar */
-    nav {
-      background-color: #0b1120;
-      border-bottom: 1px solid var(--border);
-      padding: 15px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
+        /* HEADER / NAVBAR */
+        header {
+            background: rgba(22, 27, 34, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 242, 254, 0.2);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    .logo {
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: var(--accent);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-    /* Hero Section */
-    .hero {
-      text-align: center;
-      padding: 40px 20px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
+        .logo-container i {
+            font-size: 1.8rem;
+            color: var(--miku-primary);
+            filter: drop-shadow(0 0 8px var(--miku-primary));
+        }
 
-    .hero h1 {
-      font-size: 2.2rem;
-      margin-bottom: 10px;
-    }
+        .logo-title {
+            font-weight: 700;
+            font-size: 1.3rem;
+            background: linear-gradient(135deg, var(--miku-primary), var(--miku-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-    .hero p {
-      color: var(--text-muted);
-      font-size: 1rem;
-      margin-bottom: 20px;
-    }
+        .status-badge {
+            background: rgba(57, 211, 83, 0.15);
+            border: 1px solid var(--miku-accent);
+            color: var(--miku-accent);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 0 10px rgba(57, 211, 83, 0.2);
+        }
 
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(34, 197, 94, 0.1);
-      color: #22c55e;
-      border: 1px solid #22c55e;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--miku-accent);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
 
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      background-color: #22c55e;
-      border-radius: 50%;
-    }
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(57, 211, 83, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(57, 211, 83, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(57, 211, 83, 0); }
+        }
 
-    /* Contenedor Principal */
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
+        /* HERO SECTION */
+        .hero {
+            text-align: center;
+            padding: 3rem 1.5rem 2rem 1.5rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
 
-    /* Sección de Búsqueda */
-    .search-box {
-      margin: 20px 0;
-      display: flex;
-      gap: 10px;
-    }
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff, #88e2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-    .search-box input {
-      width: 100%;
-      padding: 12px 16px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background-color: var(--card-bg);
-      color: white;
-      font-size: 0.95rem;
-      outline: none;
-    }
+        .hero p {
+            color: var(--miku-subtext);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
 
-    .search-box input:focus {
-      border-color: var(--accent);
-    }
+        /* STATS CARDS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            width: 100%;
+        }
 
-    /* Grid de Comandos */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 15px;
-    }
+        .stat-card {
+            background: var(--miku-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
 
-    .card {
-      background-color: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 18px;
-      transition: transform 0.2s, border-color 0.2s;
-    }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(0, 242, 254, 0.4);
+        }
 
-    .card:hover {
-      transform: translateY(-3px);
-      border-color: var(--accent);
-    }
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            background: rgba(0, 242, 254, 0.1);
+            color: var(--miku-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+        }
 
-    .card-title {
-      font-size: 1.1rem;
-      color: var(--accent);
-      font-weight: bold;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+        .stat-info h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
 
-    .card-desc {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      line-height: 1.4;
-    }
+        .stat-info p {
+            font-size: 0.8rem;
+            color: var(--miku-subtext);
+        }
 
-    .tag {
-      display: inline-block;
-      margin-top: 12px;
-      font-size: 0.75rem;
-      background: var(--border);
-      padding: 3px 8px;
-      border-radius: 4px;
-      color: var(--text-main);
-    }
-  </style>
+        /* SEARCH & COMMANDS */
+        .main-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1.5rem 4rem 1.5rem;
+            width: 100%;
+            flex: 1;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            background: var(--miku-card);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            border-radius: 12px;
+            color: var(--miku-text);
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            border-color: var(--miku-primary);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--miku-subtext);
+        }
+
+        /* COMMAND CARDS */
+        .commands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .cmd-card {
+            background: var(--miku-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cmd-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--miku-primary), var(--miku-secondary));
+        }
+
+        .cmd-card:hover {
+            background: var(--miku-card-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .cmd-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .cmd-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--miku-primary);
+        }
+
+        .cmd-tag {
+            background: rgba(0, 242, 254, 0.1);
+            color: var(--miku-primary);
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        .cmd-desc {
+            font-size: 0.88rem;
+            color: var(--miku-subtext);
+            line-height: 1.5;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(13, 17, 23, 0.9);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--miku-subtext);
+            font-size: 0.85rem;
+        }
+
+        footer span {
+            color: var(--miku-primary);
+        }
+    </style>
 </head>
 <body>
 
-  <nav>
-    <div class="logo">
-      <i class="fa-solid fa-robot"></i> Maruchan Bot
+    <!-- NAVBAR -->
+    <header>
+        <div class="logo-container">
+            <i class="fa-solid fa-robot"></i>
+            <span class="logo-title">Maruchan Bot</span>
+        </div>
+        <div class="status-badge" id="statusBadge">
+            <div class="status-dot"></div>
+            <span id="statusText">Conectando...</span>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <h1>Panel Oficial de Comandos</h1>
+        <p>Explora la lista completa de funciones interactivas para tu grupo de WhatsApp con la asistencia de Hatsune Miku.</p>
+    </section>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
+            <div class="stat-info">
+                <h3 id="uptimeText">--</h3>
+                <p>Tiempo de Actividad</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-terminal"></i></div>
+            <div class="stat-info">
+                <h3>69</h3>
+                <p>Comandos Activos</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-server"></i></div>
+            <div class="stat-info">
+                <h3 id="versionText">v1.0</h3>
+                <p>Versión del Bot</p>
+            </div>
+        </div>
     </div>
-    <div class="status-badge">
-      <span class="status-dot"></span> Bot Activo
-    </div>
-  </nav>
 
-  <section class="hero">
-    <h1>Panel Oficial de Comandos</h1>
-    <p>Explora la lista completa de funciones disponibles para tus grupos de WhatsApp.</p>
-  </section>
+    <!-- MAIN CONTENT -->
+    <main class="main-container">
+        <!-- SEARCH -->
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchInput" placeholder="Buscar un comando (ej: minecraft, papa, admin)..." onkeyup="filtrarComandos()">
+        </div>
 
-  <div class="container">
-    <div class="search-box">
-      <input type="text" id="searchInput" placeholder="🔍 Buscar un comando (ej: minecraft, papa, admin)..." onkeyup="filterCommands()">
-    </div>
+        <!-- COMMANDS GRID -->
+        <div class="commands-grid" id="commandsGrid">
+            
+            <div class="cmd-card" data-name="minecraft rpg juego">
+                <div class="cmd-header">
+                    <span class="cmd-title">RPG Minecraft</span>
+                    <span class="cmd-tag">Juegos / RPG</span>
+                </div>
+                <p class="cmd-desc">Explora el mundo RPG, mina recursos, craftea ítems y sube de nivel con tu perfil único.</p>
+            </div>
 
-    <div class="grid" id="commandGrid">
-      
-      <!-- Comando 1 -->
-      <div class="card" data-name="minecraft rpg minar">
-        <div class="card-title"><i class="fa-solid fa-pickaxe"></i> RPG Minecraft</div>
-        <div class="card-desc">Explora el mundo RPG, mina recursos, craftea ítems y sube de nivel con tu perfil.</div>
-        <span class="tag">Juegos / RPG</span>
-      </div>
+            <div class="cmd-card" data-name="la papa se quema juego">
+                <div class="cmd-header">
+                    <span class="cmd-title">La Papa Se Quema</span>
+                    <span class="cmd-tag">Juegos</span>
+                </div>
+                <p class="cmd-desc">Juego dinámico para grupos. Pasa la papa caliente antes de que explote en el chat.</p>
+            </div>
 
-      <!-- Comando 2 -->
-      <div class="card" data-name="papa se quema juego">
-        <div class="card-title"><i class="fa-solid fa-fire"></i> La Papa Se Quema</div>
-        <div class="card-desc">Juego dinámico para grupos. Pasa la papa caliente antes de que explote en el chat.</div>
-        <span class="tag">Juegos</span>
-      </div>
+            <div class="cmd-card" data-name="sincronizar web sync">
+                <div class="cmd-header">
+                    <span class="cmd-title">#syncweb</span>
+                    <span class="cmd-tag">Sistema</span>
+                </div>
+                <p class="cmd-desc">Sincroniza manualmente los datos de la bot con este panel web en GitHub Pages.</p>
+            </div>
 
-      <!-- Comando 3 -->
-      <div class="card" data-name="card perfil discord avatar">
-        <div class="card-title"><i class="fa-solid fa-id-card"></i> Card de Perfil</div>
-        <div class="card-desc">Genera una tarjeta gráfica estilo Discord centrada con tu foto e información.</div>
-        <span class="tag">Herramientas</span>
-      </div>
+        </div>
+    </main>
 
-      <!-- Comando 4 -->
-      <div class="card" data-name="admin grupos kick ban enlace">
-        <div class="card-title"><i class="fa-solid fa-shield-halved"></i> Gestión de Grupos</div>
-        <div class="card-desc">Herramientas avanzadas de administración para moderar usuarios e invitaciones.</div>
-        <span class="tag">Administración</span>
-      </div>
+    <!-- FOOTER -->
+    <footer>
+        <p>Maruchan Bot &copy; 2026 — Desarrollado con 💙 y powered by <span>Hatsune Miku</span></p>
+    </footer>
 
-    </div>
-  </div>
+    <!-- SCRIPT DE SINCRONIZACIÓN -->
+    <script>
+        async function cargarDatosBot() {
+            try {
+                // Leer datos.json generado por el bot
+                const respuesta = await fetch('datos.json?t=' + new Date().getTime());
+                if (!respuesta.ok) return;
+                
+                const datos = await respuesta.json();
 
-  <script>
-    function filterCommands() {
-      const input = document.getElementById('searchInput').value.toLowerCase();
-      const cards = document.querySelectorAll('.card');
+                // Actualizar estado
+                const statusText = document.getElementById('statusText');
+                if (datos.status === 'online') {
+                    statusText.innerText = `Bot En Línea (${datos.uptime || 'Activo'})`;
+                } else {
+                    statusText.innerText = 'Bot Desconectado';
+                }
 
-      cards.forEach(card => {
-        const name = card.getAttribute('data-name').toLowerCase();
-        if (name.includes(input)) {
-          card.style.display = "block";
-        } else {
-          card.style.display = "none";
+                // Actualizar estadísticas
+                if (datos.uptime) document.getElementById('uptimeText').innerText = datos.uptime;
+                if (datos.version) document.getElementById('versionText').innerText = datos.version;
+
+            } catch (e) {
+                console.log('Esperando actualización de datos...');
+            }
         }
-      });
-    }
-  </script>
-<script>
-  async function cargarDatosBot() {
-    try {
-      // Agregamos un timestamp para evitar que el navegador guarde en caché datos viejos
-      const response = await fetch('datos.json?t=' + Date.now());
-      if (!response.ok) throw new Error('No se pudo cargar los datos');
-      
-      const data = await response.json();
 
-      if (data.status === 'online') {
-        const badge = document.querySelector('.status-badge');
-        badge.innerHTML = `<span class="status-dot"></span> Bot En Línea (${data.uptime})`;
-        badge.style.color = '#22c55e';
-        badge.style.borderColor = '#22c55e';
-      }
-    } catch (e) {
-      console.log('Error cargando estado:', e);
-    }
-  }
+        function filtrarComandos() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.cmd-card');
 
-  // Cargar al abrir la página y revisar cada 1 minuto
-  cargarDatosBot();
-  setInterval(cargarDatosBot, 60000);
-</script>
+            cards.forEach(card => {
+                const searchData = card.getAttribute('data-name');
+                if (searchData.includes(input)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Cargar inmediatamente y actualizar cada 30 segundos
+        cargarDatosBot();
+        setInterval(cargarDatosBot, 30000);
+    </script>
 </body>
   </html>
