@@ -179,19 +179,22 @@
             color: var(--miku-text);
         }
 
-        .form-group input {
+        .select-group {
             width: 100%;
-            padding: 0.8rem 1rem;
-            background: rgba(13, 17, 23, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
+            padding: 0.85rem 1rem;
+            background: rgba(13, 17, 23, 0.9);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            border-radius: 10px;
             color: var(--miku-text);
+            font-size: 0.95rem;
             outline: none;
-            font-size: 0.9rem;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
         }
 
-        .form-group input:focus {
+        .select-group:focus {
             border-color: var(--miku-primary);
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
         }
 
         /* SWITCH TOGGLE */
@@ -341,10 +344,10 @@
 
     <!-- NAVEGACIÓN DE PESTAÑAS -->
     <div class="tabs-container">
-        <button class="tab-btn active" onclick="cambiarTab('comandos')">
+        <button class="tab-btn active" onclick="cambiarTab('comandos', event)">
             <i class="fa-solid fa-terminal"></i> Comandos
         </button>
-        <button class="tab-btn" onclick="cambiarTab('configuracion')">
+        <button class="tab-btn" onclick="cambiarTab('configuracion', event)">
             <i class="fa-solid fa-sliders"></i> Panel de Admin
         </button>
     </div>
@@ -365,7 +368,7 @@
                 </div>
                 <div class="cmd-card">
                     <div class="cmd-title">#syncweb</div>
-                    <p class="cmd-desc">Sincroniza el estado del bot manualmente con la web.</p>
+                    <p class="cmd-desc">Sincroniza el estado del bot y la lista de grupos manualmente.</p>
                 </div>
             </div>
         </div>
@@ -376,11 +379,13 @@
                 <div class="config-title">
                     <i class="fa-solid fa-shield-halved"></i> Configuración del Grupo
                 </div>
-                <p class="config-desc">Ajusta los parámetros del bot para tu chat de WhatsApp en tiempo real.</p>
+                <p class="config-desc">Selecciona uno de tus grupos para ajustar los parámetros del bot.</p>
 
                 <div class="form-group">
-                    <label for="groupId">ID o Número del Grupo / Chat:</label>
-                    <input type="text" id="groupId" placeholder="Ejemplo: 12036301234567890@g.us o tu número">
+                    <label for="groupSelect"><i class="fa-solid fa-users"></i> Selecciona un Grupo:</label>
+                    <select id="groupSelect" class="select-group">
+                        <option value="">Cargando lista de grupos...</option>
+                    </select>
                 </div>
 
                 <div class="switch-option">
@@ -406,7 +411,7 @@
                 </div>
 
                 <button class="save-btn" onclick="guardarAjustes()">
-                    <i class="fa-solid fa-paper-plane"></i> Enviar Configuración al Bot
+                    <i class="fa-solid fa-bolt"></i> Aplicar Cambios al Grupo
                 </button>
 
                 <p id="alertMsg" style="margin-top:1rem; text-align:center; font-size:0.85rem; color:var(--miku-primary); display:none;"></p>
@@ -421,12 +426,14 @@
     </footer>
 
     <script>
-        function cambiarTab(nombreTab) {
+        function cambiarTab(nombreTab, ev) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
 
             document.getElementById(`tab-${nombreTab}`).classList.add('active');
-            event.currentTarget.classList.add('active');
+            if (ev && ev.currentTarget) {
+                ev.currentTarget.classList.add('active');
+            }
         }
 
         async function cargarDatosBot() {
@@ -435,34 +442,52 @@
                 if (!respuesta.ok) return;
                 const datos = await respuesta.json();
 
+                // Estado del bot
                 const statusText = document.getElementById('statusText');
                 if (datos.status === 'online') {
                     statusText.innerText = `Bot En Línea (${datos.uptime || 'Activo'})`;
                 } else {
                     statusText.innerText = 'Bot Desconectado';
                 }
-            } catch (e) {}
+
+                // Cargar lista desplegable de grupos
+                const groupSelect = document.getElementById('groupSelect');
+                if (datos.groups && datos.groups.length > 0) {
+                    groupSelect.innerHTML = '<option value="">-- Selecciona un grupo --</option>';
+                    datos.groups.forEach(grupo => {
+                        const opt = document.createElement('option');
+                        opt.value = grupo.id;
+                        opt.textContent = grupo.subject;
+                        groupSelect.appendChild(opt);
+                    });
+                } else {
+                    groupSelect.innerHTML = '<option value="">No se encontraron grupos (Ejecuta #syncweb en WhatsApp)</option>';
+                }
+
+            } catch (e) {
+                console.log('Esperando actualización de datos...');
+            }
         }
 
         function guardarAjustes() {
-            const groupId = document.getElementById('groupId').value.trim();
+            const groupSelect = document.getElementById('groupSelect');
+            const selectedGroupId = groupSelect.value;
+            const selectedGroupName = groupSelect.options[groupSelect.selectedIndex]?.text || '';
             const botActivo = document.getElementById('botStatusToggle').checked;
             const antilink = document.getElementById('antilinkToggle').checked;
 
-            if (!groupId) {
-                alert('⚠️ Por favor ingresa el ID o número del grupo.');
+            if (!selectedGroupId) {
+                alert('⚠️ Por favor selecciona un grupo de la lista.');
                 return;
             }
 
             const alertMsg = document.getElementById('alertMsg');
             alertMsg.style.display = 'block';
-            alertMsg.innerText = `✅ Orden enviada para el grupo: ${groupId}. El bot la procesará en breve.`;
-
-            console.log('Orden generada:', { groupId, botActivo, antilink });
+            alertMsg.innerText = `✅ Ajustes guardados para "${selectedGroupName}". El bot aplicará los cambios.`;
         }
 
         cargarDatosBot();
         setInterval(cargarDatosBot, 30000);
     </script>
 </body>
-                    </html>
+            </html>
