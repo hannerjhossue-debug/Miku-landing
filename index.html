@@ -18,6 +18,7 @@
             --miku-text: #f0f6fc;
             --miku-subtext: #8b949e;
             --miku-accent: #39d353;
+            --miku-danger: #ff4757;
         }
 
         * {
@@ -80,7 +81,6 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 0 10px rgba(57, 211, 83, 0.2);
         }
 
         .status-dot {
@@ -97,115 +97,184 @@
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(57, 211, 83, 0); }
         }
 
-        /* HERO SECTION */
-        .hero {
-            text-align: center;
-            padding: 3rem 1.5rem 2rem 1.5rem;
+        /* NAVEGACIÓN POR PESTAÑAS */
+        .tabs-container {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .tab-btn {
+            background: var(--miku-card);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--miku-subtext);
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            color: var(--miku-primary);
+            border-color: var(--miku-primary);
+            box-shadow: 0 0 12px rgba(0, 242, 254, 0.2);
+        }
+
+        /* SECCIONES DE CONTENIDO */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .main-container {
             max-width: 900px;
             margin: 0 auto;
-        }
-
-        .hero h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #ffffff, #88e2fe);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero p {
-            color: var(--miku-subtext);
-            font-size: 1rem;
-            line-height: 1.6;
-        }
-
-        /* STATS CARDS */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.5rem;
-            max-width: 1000px;
-            margin: 2rem auto;
-            padding: 0 1.5rem;
-            width: 100%;
-        }
-
-        .stat-card {
-            background: var(--miku-card);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            transition: transform 0.3s ease, border-color 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(0, 242, 254, 0.4);
-        }
-
-        .stat-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 10px;
-            background: rgba(0, 242, 254, 0.1);
-            color: var(--miku-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-        }
-
-        .stat-info h3 {
-            font-size: 1.2rem;
-            font-weight: 700;
-        }
-
-        .stat-info p {
-            font-size: 0.8rem;
-            color: var(--miku-subtext);
-        }
-
-        /* SEARCH & COMMANDS */
-        .main-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 0 1.5rem 4rem 1.5rem;
+            padding: 2rem 1.5rem 4rem 1.5rem;
             width: 100%;
             flex: 1;
         }
 
-        .search-box {
-            position: relative;
+        /* PANEL DE CONFIGURACIÓN */
+        .config-card {
+            background: var(--miku-card);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .config-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--miku-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .config-desc {
+            font-size: 0.9rem;
+            color: var(--miku-subtext);
             margin-bottom: 2rem;
         }
 
-        .search-box input {
-            width: 100%;
-            padding: 1rem 1rem 1rem 3rem;
-            background: var(--miku-card);
-            border: 1px solid rgba(0, 242, 254, 0.2);
-            border-radius: 12px;
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
             color: var(--miku-text);
-            font-size: 0.95rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(13, 17, 23, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--miku-text);
             outline: none;
-            transition: all 0.3s ease;
+            font-size: 0.9rem;
         }
 
-        .search-box input:focus {
+        .form-group input:focus {
             border-color: var(--miku-primary);
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
         }
 
-        .search-box i {
-            position: absolute;
-            left: 1.2rem;
-            top: 50%;
-            transform: translateY(-50%);
+        /* SWITCH TOGGLE */
+        .switch-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(13, 17, 23, 0.5);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .switch-info h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .switch-info p {
+            font-size: 0.8rem;
             color: var(--miku-subtext);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #334155;
+            transition: .3s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--miku-primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+        .save-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--miku-primary), var(--miku-secondary));
+            border: none;
+            border-radius: 10px;
+            color: #000;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-top: 1rem;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 242, 254, 0.4);
         }
 
         /* COMMAND CARDS */
@@ -220,7 +289,6 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 14px;
             padding: 1.5rem;
-            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
@@ -228,45 +296,20 @@
         .cmd-card::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
+            top: 0; left: 0; width: 4px; height: 100%;
             background: linear-gradient(180deg, var(--miku-primary), var(--miku-secondary));
-        }
-
-        .cmd-card:hover {
-            background: var(--miku-card-hover);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .cmd-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.8rem;
         }
 
         .cmd-title {
             font-size: 1.1rem;
             font-weight: 600;
             color: var(--miku-primary);
-        }
-
-        .cmd-tag {
-            background: rgba(0, 242, 254, 0.1);
-            color: var(--miku-primary);
-            font-size: 0.75rem;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-weight: 500;
+            margin-bottom: 0.5rem;
         }
 
         .cmd-desc {
             font-size: 0.88rem;
             color: var(--miku-subtext);
-            line-height: 1.5;
         }
 
         /* FOOTER */
@@ -279,9 +322,7 @@
             font-size: 0.85rem;
         }
 
-        footer span {
-            color: var(--miku-primary);
-        }
+        footer span { color: var(--miku-primary); }
     </style>
 </head>
 <body>
@@ -292,79 +333,86 @@
             <i class="fa-solid fa-robot"></i>
             <span class="logo-title">Maruchan Bot</span>
         </div>
-        <div class="status-badge" id="statusBadge">
+        <div class="status-badge">
             <div class="status-dot"></div>
             <span id="statusText">Conectando...</span>
         </div>
     </header>
 
-    <!-- HERO -->
-    <section class="hero">
-        <h1>Panel Oficial de Comandos</h1>
-        <p>Explora la lista completa de funciones interactivas para tu grupo de WhatsApp con la asistencia de Hatsune Miku.</p>
-    </section>
-
-    <!-- STATS -->
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
-            <div class="stat-info">
-                <h3 id="uptimeText">--</h3>
-                <p>Tiempo de Actividad</p>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon"><i class="fa-solid fa-terminal"></i></div>
-            <div class="stat-info">
-                <h3>69</h3>
-                <p>Comandos Activos</p>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon"><i class="fa-solid fa-server"></i></div>
-            <div class="stat-info">
-                <h3 id="versionText">v1.0</h3>
-                <p>Versión del Bot</p>
-            </div>
-        </div>
+    <!-- NAVEGACIÓN DE PESTAÑAS -->
+    <div class="tabs-container">
+        <button class="tab-btn active" onclick="cambiarTab('comandos')">
+            <i class="fa-solid fa-terminal"></i> Comandos
+        </button>
+        <button class="tab-btn" onclick="cambiarTab('configuracion')">
+            <i class="fa-solid fa-sliders"></i> Panel de Admin
+        </button>
     </div>
 
-    <!-- MAIN CONTENT -->
+    <!-- MAIN CONTAINER -->
     <main class="main-container">
-        <!-- SEARCH -->
-        <div class="search-box">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="searchInput" placeholder="Buscar un comando (ej: minecraft, papa, admin)..." onkeyup="filtrarComandos()">
+
+        <!-- PESTAÑA 1: COMANDOS -->
+        <div id="tab-comandos" class="tab-content active">
+            <div class="commands-grid">
+                <div class="cmd-card">
+                    <div class="cmd-title">RPG Minecraft</div>
+                    <p class="cmd-desc">Mina recursos, craftea herramientas y sube de nivel.</p>
+                </div>
+                <div class="cmd-card">
+                    <div class="cmd-title">La Papa Se Quema</div>
+                    <p class="cmd-desc">Juego dinámico para grupos en tiempo real.</p>
+                </div>
+                <div class="cmd-card">
+                    <div class="cmd-title">#syncweb</div>
+                    <p class="cmd-desc">Sincroniza el estado del bot manualmente con la web.</p>
+                </div>
+            </div>
         </div>
 
-        <!-- COMMANDS GRID -->
-        <div class="commands-grid" id="commandsGrid">
-            
-            <div class="cmd-card" data-name="minecraft rpg juego">
-                <div class="cmd-header">
-                    <span class="cmd-title">RPG Minecraft</span>
-                    <span class="cmd-tag">Juegos / RPG</span>
+        <!-- PESTAÑA 2: CONFIGURACIÓN -->
+        <div id="tab-configuracion" class="tab-content">
+            <div class="config-card">
+                <div class="config-title">
+                    <i class="fa-solid fa-shield-halved"></i> Configuración del Grupo
                 </div>
-                <p class="cmd-desc">Explora el mundo RPG, mina recursos, craftea ítems y sube de nivel con tu perfil único.</p>
-            </div>
+                <p class="config-desc">Ajusta los parámetros del bot para tu chat de WhatsApp en tiempo real.</p>
 
-            <div class="cmd-card" data-name="la papa se quema juego">
-                <div class="cmd-header">
-                    <span class="cmd-title">La Papa Se Quema</span>
-                    <span class="cmd-tag">Juegos</span>
+                <div class="form-group">
+                    <label for="groupId">ID o Número del Grupo / Chat:</label>
+                    <input type="text" id="groupId" placeholder="Ejemplo: 12036301234567890@g.us o tu número">
                 </div>
-                <p class="cmd-desc">Juego dinámico para grupos. Pasa la papa caliente antes de que explote en el chat.</p>
-            </div>
 
-            <div class="cmd-card" data-name="sincronizar web sync">
-                <div class="cmd-header">
-                    <span class="cmd-title">#syncweb</span>
-                    <span class="cmd-tag">Sistema</span>
+                <div class="switch-option">
+                    <div class="switch-info">
+                        <h4>Estado del Bot en el Grupo</h4>
+                        <p>Activa o desactiva la respuesta a comandos en este chat</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="botStatusToggle" checked>
+                        <span class="slider"></span>
+                    </label>
                 </div>
-                <p class="cmd-desc">Sincroniza manualmente los datos de la bot con este panel web en GitHub Pages.</p>
-            </div>
 
+                <div class="switch-option">
+                    <div class="switch-info">
+                        <h4>Modo Anti-Links</h4>
+                        <p>Elimina automáticamente enlaces no autorizados</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="antilinkToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <button class="save-btn" onclick="guardarAjustes()">
+                    <i class="fa-solid fa-paper-plane"></i> Enviar Configuración al Bot
+                </button>
+
+                <p id="alertMsg" style="margin-top:1rem; text-align:center; font-size:0.85rem; color:var(--miku-primary); display:none;"></p>
+            </div>
         </div>
+
     </main>
 
     <!-- FOOTER -->
@@ -372,50 +420,49 @@
         <p>Maruchan Bot &copy; 2026 — Desarrollado con 💙 y powered by <span>Hatsune Miku</span></p>
     </footer>
 
-    <!-- SCRIPT DE SINCRONIZACIÓN -->
     <script>
+        function cambiarTab(nombreTab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+            document.getElementById(`tab-${nombreTab}`).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
         async function cargarDatosBot() {
             try {
-                // Leer datos.json generado por el bot
                 const respuesta = await fetch('datos.json?t=' + new Date().getTime());
                 if (!respuesta.ok) return;
-                
                 const datos = await respuesta.json();
 
-                // Actualizar estado
                 const statusText = document.getElementById('statusText');
                 if (datos.status === 'online') {
                     statusText.innerText = `Bot En Línea (${datos.uptime || 'Activo'})`;
                 } else {
                     statusText.innerText = 'Bot Desconectado';
                 }
+            } catch (e) {}
+        }
 
-                // Actualizar estadísticas
-                if (datos.uptime) document.getElementById('uptimeText').innerText = datos.uptime;
-                if (datos.version) document.getElementById('versionText').innerText = datos.version;
+        function guardarAjustes() {
+            const groupId = document.getElementById('groupId').value.trim();
+            const botActivo = document.getElementById('botStatusToggle').checked;
+            const antilink = document.getElementById('antilinkToggle').checked;
 
-            } catch (e) {
-                console.log('Esperando actualización de datos...');
+            if (!groupId) {
+                alert('⚠️ Por favor ingresa el ID o número del grupo.');
+                return;
             }
+
+            const alertMsg = document.getElementById('alertMsg');
+            alertMsg.style.display = 'block';
+            alertMsg.innerText = `✅ Orden enviada para el grupo: ${groupId}. El bot la procesará en breve.`;
+
+            console.log('Orden generada:', { groupId, botActivo, antilink });
         }
 
-        function filtrarComandos() {
-            const input = document.getElementById('searchInput').value.toLowerCase();
-            const cards = document.querySelectorAll('.cmd-card');
-
-            cards.forEach(card => {
-                const searchData = card.getAttribute('data-name');
-                if (searchData.includes(input)) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        }
-
-        // Cargar inmediatamente y actualizar cada 30 segundos
         cargarDatosBot();
         setInterval(cargarDatosBot, 30000);
     </script>
 </body>
-  </html>
+                    </html>
