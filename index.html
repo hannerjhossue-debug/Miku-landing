@@ -235,6 +235,29 @@
       });
     }
   </script>
+<script>
+  async function cargarDatosBot() {
+    try {
+      // Agregamos un timestamp para evitar que el navegador guarde en caché datos viejos
+      const response = await fetch('datos.json?t=' + Date.now());
+      if (!response.ok) throw new Error('No se pudo cargar los datos');
+      
+      const data = await response.json();
 
+      if (data.status === 'online') {
+        const badge = document.querySelector('.status-badge');
+        badge.innerHTML = `<span class="status-dot"></span> Bot En Línea (${data.uptime})`;
+        badge.style.color = '#22c55e';
+        badge.style.borderColor = '#22c55e';
+      }
+    } catch (e) {
+      console.log('Error cargando estado:', e);
+    }
+  }
+
+  // Cargar al abrir la página y revisar cada 1 minuto
+  cargarDatosBot();
+  setInterval(cargarDatosBot, 60000);
+</script>
 </body>
   </html>
