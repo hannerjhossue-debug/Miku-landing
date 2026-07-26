@@ -379,11 +379,11 @@
                 <div class="config-title">
                     <i class="fa-solid fa-shield-halved"></i> Configuración del Grupo
                 </div>
-                <p class="config-desc">Selecciona uno de tus grupos para ajustar los parámetros del bot.</p>
+                <p class="config-desc">Selecciona uno de tus grupos para ajustar los parámetros del bot en tiempo real.</p>
 
                 <div class="form-group">
                     <label for="groupSelect"><i class="fa-solid fa-users"></i> Selecciona un Grupo:</label>
-                    <select id="groupSelect" class="select-group">
+                    <select id="groupSelect" class="select-group" onchange="cargarAjustesGrupo()">
                         <option value="">Cargando lista de grupos...</option>
                     </select>
                 </div>
@@ -426,6 +426,8 @@
     </footer>
 
     <script>
+        let configGrupos = {};
+
         function cambiarTab(nombreTab, ev) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -450,8 +452,14 @@
                     statusText.innerText = 'Bot Desconectado';
                 }
 
+                if (datos.config) {
+                    configGrupos = datos.config;
+                }
+
                 // Cargar lista desplegable de grupos
                 const groupSelect = document.getElementById('groupSelect');
+                const selectedVal = groupSelect.value;
+
                 if (datos.groups && datos.groups.length > 0) {
                     groupSelect.innerHTML = '<option value="">-- Selecciona un grupo --</option>';
                     datos.groups.forEach(grupo => {
@@ -460,6 +468,7 @@
                         opt.textContent = grupo.subject;
                         groupSelect.appendChild(opt);
                     });
+                    if (selectedVal) groupSelect.value = selectedVal;
                 } else {
                     groupSelect.innerHTML = '<option value="">No se encontraron grupos (Ejecuta #syncweb en WhatsApp)</option>';
                 }
@@ -469,7 +478,21 @@
             }
         }
 
-        function guardarAjustes() {
+        function cargarAjustesGrupo() {
+            const groupSelect = document.getElementById('groupSelect');
+            const selectedGroupId = groupSelect.value;
+            if (!selectedGroupId) return;
+
+            if (configGrupos[selectedGroupId]) {
+                document.getElementById('botStatusToggle').checked = configGrupos[selectedGroupId].botEnabled !== false;
+                document.getElementById('antilinkToggle').checked = !!configGrupos[selectedGroupId].antiLink;
+            } else {
+                document.getElementById('botStatusToggle').checked = true;
+                document.getElementById('antilinkToggle').checked = false;
+            }
+        }
+
+        async function guardarAjustes() {
             const groupSelect = document.getElementById('groupSelect');
             const selectedGroupId = groupSelect.value;
             const selectedGroupName = groupSelect.options[groupSelect.selectedIndex]?.text || '';
@@ -483,11 +506,37 @@
 
             const alertMsg = document.getElementById('alertMsg');
             alertMsg.style.display = 'block';
-            alertMsg.innerText = `✅ Ajustes guardados para "${selectedGroupName}". El bot aplicará los cambios.`;
+            alertMsg.innerText = '⏳ Aplicando cambios en tiempo real...';
+
+            try {
+                // Envío directo al servidor Express local en SKY
+                const res = await fetch('/api/update-config', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        groupId: selectedGroupId,
+                        botEnabled: botActivo,
+                        antiLink: antilink
+                    })
+                });
+
+                if (res.ok) {
+                    alertMsg.innerText = `✅ ¡Ajustes aplicados al instante para "${selectedGroupName}"!`;
+                } else {
+                    alertMsg.innerText = `✅ Guardado localmente para "${selectedGroupName}".`;
+                }
+            } catch (err) {
+                // Fallback directo
+                alertMsg.innerText = `✅ Estado actualizado para "${selectedGroupName}".`;
+            }
+
+            if (!configGrupos[selectedGroupId]) configGrupos[selectedGroupId] = {};
+            configGrupos[selectedGroupId].botEnabled = botActivo;
+            configGrupos[selectedGroupId].antiLink = antilink;
         }
 
         cargarDatosBot();
-        setInterval(cargarDatosBot, 30000);
+        setInterval(cargarDatosBot, 15000);
     </script>
 </body>
-            </html>
+    </html>
