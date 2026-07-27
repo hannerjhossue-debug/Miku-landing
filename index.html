@@ -515,11 +515,18 @@
 </div>
 
 <script>
-    // ⚠️ REEMPLAZA ESTOS TRES VALORES CON TUS DATOS DE GITHUB:
-    const GITHUB_USERNAME = 'hannerjhossue-debug'; // Tu nombre de usuario en GitHub
-    const GITHUB_REPO = 'Proyecto1';    // Nombre exacto del repositorio
-    const GITHUB_TOKEN = 'ghp_xxxxxxxxxxxx';     // El Personal Access Token que generaste
+     const GITHUB_USERNAME = 'hannerjhossue-debug';
+const GITHUB_REPO = 'Miku-landing'; // El repo del dashboard
 
+// Recupera el token guardado en el teléfono, si no existe, lo solicita
+let GITHUB_TOKEN = localStorage.getItem('miku_github_token');
+
+if (!GITHUB_TOKEN) {
+    GITHUB_TOKEN = prompt('Ingresa tu Personal Access Token de GitHub (se guardará de forma segura en tu navegador):');
+    if (GITHUB_TOKEN) {
+        localStorage.setItem('miku_github_token', GITHUB_TOKEN.trim());
+    }
+    }
     // Cargar configuración existente al abrir la página
     async function cargarConfiguracionInicial() {
         try {
