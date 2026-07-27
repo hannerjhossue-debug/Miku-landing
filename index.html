@@ -412,22 +412,22 @@
             </div>
             <div class="brand-text">
                 <h1>Maruchan Bot</h1>
-                <p>Panel Web de Gestión y Control</p>
+                <p>Panel Web de Gestión y Control GitHub</p>
             </div>
         </div>
         <div class="server-status" id="serverStatusBadge">
             <div class="pulse-dot"></div>
-            <span id="statusText">Conectando...</span>
+            <span id="statusText">Sincronizado</span>
         </div>
     </header>
 
     <!-- METRICAS DEL SISTEMA -->
     <div class="stats-grid">
         <div class="stat-card">
-            <div class="stat-icon"><i class="fa-solid fa-server"></i></div>
+            <div class="stat-icon"><i class="fa-solid fa-cloud"></i></div>
             <div class="stat-info">
-                <h4>Servidor</h4>
-                <span id="statMemory">Activo</span>
+                <h4>Servicio</h4>
+                <span>GitHub Cloud</span>
             </div>
         </div>
         <div class="stat-card">
@@ -438,10 +438,10 @@
             </div>
         </div>
         <div class="stat-card">
-            <div class="stat-icon"><i class="fa-solid fa-bolt"></i></div>
+            <div class="stat-icon"><i class="fa-solid fa-shield-halved"></i></div>
             <div class="stat-info">
-                <h4>Tiempo Activo</h4>
-                <span id="statUptime">0m</span>
+                <h4>Sincronización</h4>
+                <span>Tiempo Real</span>
             </div>
         </div>
     </div>
@@ -457,7 +457,7 @@
             <div class="group-selector-box">
                 <label for="selectGrupo"><i class="fa-solid fa-user-group"></i> Seleccionar Chat / Grupo:</label>
                 <select id="selectGrupo" onchange="actualizarSeleccionUI()">
-                    <option value="1203630123456789@g.us">Pruebas bot (Grupo Demo)</option>
+                    <option value="1203630123456789@g.us">Pruebas bot (Grupo Principal)</option>
                 </select>
             </div>
 
@@ -465,7 +465,7 @@
                 <div class="setting-row">
                     <div class="setting-details">
                         <h3>Encender / Apagar Bot</h3>
-                        <p>Habilita o deshabilita las respuestas de comandos en este grupo</p>
+                        <p>Habilita o deshabilita las respuestas de comandos globalmente</p>
                     </div>
                     <label class="switch">
                         <input type="checkbox" id="toggleBot" checked>
@@ -486,7 +486,7 @@
             </div>
 
             <button class="btn-submit" onclick="guardarConfiguracion()">
-                <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios en el Bot
+                <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios en GitHub
             </button>
 
             <div class="status-feedback" id="mensajeFeedback"></div>
@@ -495,7 +495,7 @@
         <!-- SIDEBAR DE GRUPOS REGISTRADOS -->
         <div class="card-panel">
             <div class="panel-header">
-                <h2><i class="fa-solid fa-shield-halved"></i> Estado de Chats</h2>
+                <h2><i class="fa-solid fa-list-check"></i> Estado del Bot</h2>
             </div>
 
             <div class="settings-list" id="listaResumenGrupos">
@@ -515,22 +515,38 @@
 </div>
 
 <script>
-    // ⚠️ REEMPLAZA ESTA VARIABLE POR LA URL QUE TE MUESTRE LA CONSOLA DE SKY AL INICIAR
-    // Ejemplo: 'https://random-words-123.loca.lt' o tu IP pública
-    const URL_API_BOT = 'https://tunnel-de-tu-bot.loca.lt';
+    // ⚠️ REEMPLAZA ESTOS TRES VALORES CON TUS DATOS DE GITHUB:
+    const GITHUB_USERNAME = 'TU_USUARIO_GITHUB'; // Tu nombre de usuario en GitHub
+    const GITHUB_REPO = 'NOMBRE_DE_TU_REPO';    // Nombre exacto del repositorio
+    const GITHUB_TOKEN = 'ghp_xxxxxxxxxxxx';     // El Personal Access Token que generaste
 
-    // Función para actualizar la interfaz al cambiar de grupo
-    function actualizarSeleccionUI() {
-        const selectGrupo = document.getElementById('selectGrupo');
-        const groupId = selectGrupo.value;
-        const feedback = document.getElementById('mensajeFeedback');
-        feedback.innerText = '';
+    // Cargar configuración existente al abrir la página
+    async function cargarConfiguracionInicial() {
+        try {
+            const res = await fetch(`https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/main/config.json?t=${Date.now()}`);
+            if (res.ok) {
+                const config = await res.json();
+                document.getElementById('toggleBot').checked = config.botActivo !== false;
+                document.getElementById('toggleAntiLinks').checked = config.antiLinks === true;
+                
+                const badge = document.getElementById('badgeEstadoGrupo');
+                if (badge) {
+                    badge.className = config.botActivo ? 'badge-active' : 'badge-off';
+                    badge.innerText = config.botActivo ? 'ACTIVO' : 'APAGADO';
+                }
+            }
+        } catch (e) {
+            console.log('Cargando valores por defecto...');
+        }
     }
 
-    // Función que envía los datos reales a la API del servidor de Node.js
+    function actualizarSeleccionUI() {
+        document.getElementById('mensajeFeedback').innerText = '';
+    }
+
+    // Guardar configuración modificando el config.json en GitHub
     async function guardarConfiguracion() {
         const selectGrupo = document.getElementById('selectGrupo');
-        const groupId = selectGrupo.value;
         const nombreGrupo = selectGrupo.options[selectGrupo.selectedIndex].text;
         
         const botActivo = document.getElementById('toggleBot').checked;
@@ -538,75 +554,63 @@
         const feedback = document.getElementById('mensajeFeedback');
 
         feedback.style.color = 'var(--accent-cyan)';
-        feedback.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando configuración a Mongoose...';
+        feedback.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando cambios en GitHub...';
 
         try {
-            const respuesta = await fetch(`${URL_API_BOT}/api/config-grupo`, {
-                method: 'POST',
+            // 1. Obtener el SHA actual del archivo config.json
+            const getRes = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/config.json`, {
+                headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+            });
+            
+            if (!getRes.ok) {
+                throw new Error('No se encontró el archivo config.json en tu repositorio.');
+            }
+
+            const fileData = await getRes.json();
+            const sha = fileData.sha;
+
+            // 2. Preparar el nuevo contenido JSON
+            const nuevoContenido = JSON.stringify({ botActivo, antiLinks }, null, 2);
+            
+            // Convertir a Base64 de forma compatible con UTF-8
+            const contentBase64 = btoa(unescape(encodeURIComponent(nuevoContenido)));
+
+            // 3. Enviar actualización a la API de GitHub
+            const updateRes = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/config.json`, {
+                method: 'PUT',
                 headers: {
-                    'Bypass-Tunnel-Remainder': 'true', // Salta la pantalla de advertencia de localtunnel
+                    'Authorization': `token ${GITHUB_TOKEN}`,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    groupId: groupId,
-                    botActivo: botActivo,
-                    antiLinks: antiLinks
+                    message: `Actualización de configuración para ${nombreGrupo}`,
+                    content: contentBase64,
+                    sha: sha
                 })
             });
 
-            const resultado = await respuesta.json();
-
-            if (resultado.status === 'ok') {
+            if (updateRes.ok) {
                 feedback.style.color = 'var(--success)';
-                feedback.innerHTML = `<i class="fa-solid fa-circle-check"></i> ¡Guardado con éxito para "${nombreGrupo}"!`;
+                feedback.innerHTML = `<i class="fa-solid fa-circle-check"></i> ¡Guardado en GitHub! El bot sincronizará en segundos.`;
 
-                // Actualiza la etiqueta visual de la barra lateral
                 const badge = document.getElementById('badgeEstadoGrupo');
                 if (badge) {
                     badge.className = botActivo ? 'badge-active' : 'badge-off';
                     badge.innerText = botActivo ? 'ACTIVO' : 'APAGADO';
                 }
             } else {
-                feedback.style.color = 'var(--danger)';
-                feedback.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> El servidor de Node.js rechazó los datos.';
+                throw new Error('GitHub rechazó la actualización. Revisa tu Token.');
             }
+
         } catch (error) {
-            console.error('Error al conectar con la API:', error);
+            console.error('Error al guardar en GitHub:', error);
             feedback.style.color = 'var(--danger)';
-            feedback.innerHTML = '⚠️ No se pudo conectar con el bot. Verifica la URL_API_BOT o si el bot está encendido.';
+            feedback.innerHTML = `⚠️ ${error.message}`;
         }
     }
 
-    // Comprobación de estado en tiempo real
-    async function verificarEstatusBot() {
-        const statusText = document.getElementById('statusText');
-        const statUptime = document.getElementById('statUptime');
-
-        try {
-            const res = await fetch(`${URL_API_BOT}/api/status`, {
-                headers: { 'Bypass-Tunnel-Remainder': 'true' }
-            });
-            const data = await res.json();
-
-            if (data.status === 'online') {
-                statusText.innerText = 'Bot En Línea';
-                
-                // Formatear tiempo de actividad
-                const mins = Math.floor(data.uptime / 60);
-                statUptime.innerText = `${mins}m`;
-            }
-        } catch (e) {
-            statusText.innerText = 'Desconectado';
-            document.getElementById('serverStatusBadge').style.borderColor = 'rgba(239,68,68,0.4)';
-            document.getElementById('serverStatusBadge').style.background = 'rgba(239,68,68,0.1)';
-            document.getElementById('serverStatusBadge').style.color = 'var(--danger)';
-        }
-    }
-
-    // Ejecuta comprobación al cargar la página
-    window.onload = () => {
-        verificarEstatusBot();
-    };
+    // Iniciar al cargar la web
+    window.onload = cargarConfiguracionInicial;
 </script>
 
 </body>
