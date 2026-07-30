@@ -1,8 +1,61 @@
 {
   "botName": "Maruchan Bot",
   "status": "online",
-  "uptime": "10m 1s",
-  "lastUpdate": "30/7/2026, 21:48:00",
+  "uptime": "11m 1s",
+  "lastUpdate": "30/7/2026, 21:49:01",
   "version": "v1.0",
-  "groups": []
+  "groups": [
+    {
+      "id": "120363399611253927@g.us",
+      "subject": "{L̴a̴s̴ 100 N̴o̴v̴i̴a̴s̴~}♥︎ ♥ ♥︎"
+    },
+    {
+      "id": "120363431274073837@g.us",
+      "subject": "La baticueva 🦇"
+    },
+    {
+      "id": "120363410879650723@g.us",
+      "subject": "Reportes y bugs"
+    },
+    {
+      "id": "120363409900866478@g.us",
+      "subject": "Pruebas 2.0"
+    },
+    {
+      "id": "120363412264516319@g.us",
+      "subject": "Stickers"
+    },
+    {
+      "id": "120363409998718146@g.us",
+      "subject": "Pruebas bot"
+    },
+    {
+      "id": "120363427569053108@g.us",
+      "subject": "La baticueva 🦇"
+    },
+    {
+      "id": "120363429037526181@g.us",
+      "subject": "General"
+    },
+    {
+      "id": "120363420438757118@g.us",
+      "subject": "❃l ꙰𝔹𝕠𝕥 𝕃𝕠𝕧𝕖,❃l ꙰✼ 👾"
+    },
+    {
+      "id": "120363412904176715@g.us",
+      "subject": "Deidad Pepe"
+    },
+    {
+      "id": "120363425384618396@g.us",
+      "subject": "Hombre libre 🗿🗿🚬🚬"
+    },
+    {
+      "id": "120363417098167704@g.us",
+      "subject": "{L̴a̴s̴ 100 N̴o̴v̴i̴a̴s̴~}♥︎ ♥ ♥︎"
+    },
+    {
+      "id": "120363341662610602@g.us",
+      "subject": "Cosmic-Bot Sub-Bots support"
+    }
+  ]
 }
