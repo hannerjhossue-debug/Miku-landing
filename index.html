@@ -3,270 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maruchan Bot - Dashboard Profesional</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Hatsune Miku - Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-color: #080c14;
-            --card-bg: #111827;
-            --card-border: #1f293d;
-            --accent-cyan: #00f2fe;
-            --accent-blue: #4facfe;
-            --accent-purple: #7f56d9;
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --accent-cyan: #38bdf8;
+            --accent-pink: #ec4899;
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Outfit', sans-serif;
-            transition: background 0.3s, border-color 0.3s;
         }
 
         body {
-            background-color: var(--bg-color);
+            background-color: var(--bg-dark);
             color: var(--text-main);
-            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
             padding: 20px;
             display: flex;
             justify-content: center;
         }
 
-        .dashboard-container {
+        .container {
             width: 100%;
-            max-width: 1100px;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        /* HEADER PRINCIPAL */
-        header {
-            background: linear-gradient(135deg, rgba(17, 24, 39, 0.8), rgba(15, 23, 42, 0.9));
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--card-border);
-            padding: 20px 28px;
-            border-radius: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-        }
-
-        .brand-section {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .bot-avatar {
-            width: 52px;
-            height: 52px;
-            border-radius: 16px;
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: #000;
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
-        }
-
-        .brand-text h1 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .brand-text p {
-            font-size: 0.85rem;
-            color: var(--text-sub);
-        }
-
-        .server-status {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-size: 0.85rem;
-            color: var(--success);
-            font-weight: 600;
-        }
-
-        .pulse-dot {
-            width: 8px;
-            height: 8px;
-            background-color: var(--success);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--success);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-        }
-
-        /* METRICAS Y ESTADISTICAS */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 16px;
-        }
-
-        .stat-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 18px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        }
-
-        .stat-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 14px;
-            background: rgba(0, 242, 254, 0.08);
-            color: var(--accent-cyan);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            border: 1px solid rgba(0, 242, 254, 0.2);
-        }
-
-        .stat-info h4 {
-            font-size: 0.8rem;
-            color: var(--text-sub);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .stat-info span {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--text-main);
-        }
-
-        /* LAYOUT EN DOS COLUMNAS */
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 340px;
-            gap: 24px;
-        }
-
-        @media (max-width: 900px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .card-panel {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 24px;
+            max-width: 500px;
             display: flex;
             flex-direction: column;
             gap: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
         }
 
-        .panel-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid var(--card-border);
-            padding-bottom: 14px;
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .panel-header h2 {
-            font-size: 1.1rem;
-            font-weight: 600;
+        h2 {
+            margin-top: 0;
+            font-size: 1.25rem;
             display: flex;
             align-items: center;
             gap: 10px;
-            color: var(--text-main);
+            color: var(--accent-cyan);
         }
 
-        /* SELECCION DE GRUPO */
-        .group-selector-box {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+        .form-group {
+            margin-bottom: 20px;
         }
 
-        .group-selector-box label {
-            font-size: 0.85rem;
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
             color: var(--text-sub);
-            font-weight: 600;
         }
 
         select {
             width: 100%;
-            padding: 14px;
-            background: var(--bg-color);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            background-color: var(--bg-dark);
             color: var(--text-main);
-            font-size: 0.95rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             outline: none;
-            cursor: pointer;
+            font-size: 1rem;
         }
 
-        select:focus {
-            border-color: var(--accent-cyan);
+        .toggle-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* LISTA DE INTERRUPTORES / CONFIGURACIÓN */
-        .settings-list {
+        .toggle-label {
             display: flex;
             flex-direction: column;
-            gap: 12px;
         }
 
-        .setting-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            padding: 16px;
-            border-radius: 14px;
-        }
-
-        .setting-details h3 {
-            font-size: 0.95rem;
+        .toggle-title {
             font-weight: 600;
-            margin-bottom: 4px;
+            font-size: 0.95rem;
         }
 
-        .setting-details p {
+        .toggle-desc {
             font-size: 0.8rem;
             color: var(--text-sub);
         }
 
-        /* SWITCH PERSONALIZADO */
         .switch {
             position: relative;
             display: inline-block;
-            width: 48px;
-            height: 26px;
+            width: 46px;
+            height: 24px;
         }
 
         .switch input {
@@ -279,10 +112,9 @@
             position: absolute;
             cursor: pointer;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #1e293b;
+            background-color: #334155;
             transition: .3s;
-            border-radius: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
         }
 
         .slider:before {
@@ -292,332 +124,172 @@
             width: 18px;
             left: 3px;
             bottom: 3px;
-            background-color: #94a3b8;
+            background-color: white;
             transition: .3s;
             border-radius: 50%;
         }
 
         input:checked + .slider {
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
-            border-color: transparent;
+            background-color: var(--accent-cyan);
         }
 
         input:checked + .slider:before {
             transform: translateX(22px);
-            background-color: #000;
         }
 
-        /* BOTON DE APLICAR CAMBIOS */
-        .btn-submit {
-            background: linear-gradient(90deg, var(--accent-cyan) 0%, var(--accent-blue) 100%);
-            color: #0b0f19;
-            font-weight: 700;
-            font-size: 1rem;
+        .btn-save {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent-cyan), #0284c7);
+            color: white;
             border: none;
-            padding: 16px;
-            border-radius: 14px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.25);
-        }
-
-        .btn-submit:hover {
-            opacity: 0.95;
-            transform: translateY(-1px);
-        }
-
-        .btn-submit:active {
-            transform: translateY(1px);
-        }
-
-        /* ALERTA O MENSAJE DE ESTADO */
-        .status-feedback {
-            text-align: center;
-            font-size: 0.85rem;
-            min-height: 20px;
-            font-weight: 600;
-        }
-
-        /* SIDEBAR DE RANKING / INFO */
-        .ranking-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .ranking-item:last-child {
-            border-bottom: none;
-        }
-
-        .group-meta {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .group-avatar {
-            width: 36px;
-            height: 36px;
+            padding: 14px;
             border-radius: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            color: var(--accent-cyan);
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: opacity 0.2s;
         }
 
-        .group-name h5 {
-            font-size: 0.88rem;
-            font-weight: 600;
+        .btn-save:hover {
+            opacity: 0.9;
         }
 
-        .group-name span {
+        #mensajeFeedback {
+            margin-top: 12px;
+            font-size: 0.85rem;
+            text-align: center;
+            min-height: 20px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
             font-size: 0.75rem;
-            color: var(--text-sub);
+            font-weight: bold;
         }
 
-        .badge-active {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--success);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.72rem;
-            font-weight: 700;
-        }
-
-        .badge-off {
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--danger);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.72rem;
-            font-weight: 700;
-        }
+        .badge-active { background-color: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .badge-off { background-color: rgba(239, 68, 68, 0.2); color: #ef4444; }
     </style>
 </head>
 <body>
 
-<div class="dashboard-container">
-    <!-- HEADER GENERAL -->
-    <header>
-        <div class="brand-section">
-            <div class="bot-avatar">
-                <i class="fa-solid fa-robot"></i>
-            </div>
-            <div class="brand-text">
-                <h1>Maruchan Bot</h1>
-                <p>Panel Web de Gestión y Control GitHub</p>
-            </div>
-        </div>
-        <div class="server-status" id="serverStatusBadge">
-            <div class="pulse-dot"></div>
-            <span id="statusText">Sincronizado</span>
-        </div>
-    </header>
+<div class="container">
+    <div class="card">
+        <h2><i class="fa-solid fa-sliders"></i> Ajustes del Grupo</h2>
 
-    <!-- METRICAS DEL SISTEMA -->
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-icon"><i class="fa-solid fa-cloud"></i></div>
-            <div class="stat-info">
-                <h4>Servicio</h4>
-                <span>GitHub Cloud</span>
-            </div>
+        <div class="form-group">
+            <label for="selectGrupo"><i class="fa-solid fa-users"></i> Seleccionar Chat / Grupo:</label>
+            <select id="selectGrupo" onchange="actualizarSeleccionUI()">
+                <option value="1203630XXXXX@g.us">Pruebas bot (Grupo Principal)</option>
+            </select>
         </div>
-        <div class="stat-card">
-            <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
-            <div class="stat-info">
-                <h4>Grupos Conectados</h4>
-                <span id="statGroups">1</span>
+
+        <div class="toggle-container">
+            <div class="toggle-label">
+                <span class="toggle-title">Encender / Apagar Bot</span>
+                <span class="toggle-desc">Habilita o deshabilita las respuestas de comandos</span>
             </div>
+            <label class="switch">
+                <input type="checkbox" id="toggleBot" checked>
+                <span class="slider"></span>
+            </label>
         </div>
-        <div class="stat-card">
-            <div class="stat-icon"><i class="fa-solid fa-shield-halved"></i></div>
-            <div class="stat-info">
-                <h4>Sincronización</h4>
-                <span>Tiempo Real</span>
+
+        <div class="toggle-container">
+            <div class="toggle-label">
+                <span class="toggle-title">Filtro Anti-Enlaces (AntiLinks)</span>
+                <span class="toggle-desc">Borra automáticamente los links enviadas al chat</span>
             </div>
+            <label class="switch">
+                <input type="checkbox" id="toggleAntiLinks">
+                <span class="slider"></span>
+            </label>
         </div>
+
+        <button class="btn-save" onclick="guardarConfiguracion()">
+            <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios
+        </button>
+
+        <div id="mensajeFeedback"></div>
     </div>
 
-    <!-- CONTENIDO PRINCIPAL -->
-    <div class="main-content">
-        <!-- PANEL DE CONTROL DEL GRUPO -->
-        <div class="card-panel">
-            <div class="panel-header">
-                <h2><i class="fa-solid fa-sliders"></i> Ajustes del Grupo</h2>
+    <div class="card">
+        <h2><i class="fa-solid fa-list-check"></i> Estado del Bot</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <strong id="nombreGrupoActual">Pruebas bot</strong><br>
+                <small style="color: var(--text-sub);" id="idGrupoActual">1203630XXXXX@g.us</small>
             </div>
-
-            <div class="group-selector-box">
-                <label for="selectGrupo"><i class="fa-solid fa-user-group"></i> Seleccionar Chat / Grupo:</label>
-                <select id="selectGrupo" onchange="actualizarSeleccionUI()">
-                    <option value="1203630123456789@g.us">Pruebas bot (Grupo Principal)</option>
-                </select>
-            </div>
-
-            <div class="settings-list">
-                <div class="setting-row">
-                    <div class="setting-details">
-                        <h3>Encender / Apagar Bot</h3>
-                        <p>Habilita o deshabilita las respuestas de comandos globalmente</p>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" id="toggleBot" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-
-                <div class="setting-row">
-                    <div class="setting-details">
-                        <h3>Filtro Anti-Enlaces (AntiLinks)</h3>
-                        <p>Borra automáticamente los links no autorizados enviados al chat</p>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" id="toggleAntiLinks">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-            </div>
-
-            <button class="btn-submit" onclick="guardarConfiguracion()">
-                <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios en GitHub
-            </button>
-
-            <div class="status-feedback" id="mensajeFeedback"></div>
-        </div>
-
-        <!-- SIDEBAR DE GRUPOS REGISTRADOS -->
-        <div class="card-panel">
-            <div class="panel-header">
-                <h2><i class="fa-solid fa-list-check"></i> Estado del Bot</h2>
-            </div>
-
-            <div class="settings-list" id="listaResumenGrupos">
-                <div class="ranking-item">
-                    <div class="group-meta">
-                        <div class="group-avatar"><i class="fa-solid fa-comments"></i></div>
-                        <div class="group-name">
-                            <h5>Pruebas bot</h5>
-                            <span>1203630...</span>
-                        </div>
-                    </div>
-                    <span class="badge-active" id="badgeEstadoGrupo">ACTIVO</span>
-                </div>
-            </div>
+            <span id="badgeEstadoGrupo" class="status-badge badge-active">ACTIVO</span>
         </div>
     </div>
 </div>
 
 <script>
-     const GITHUB_USERNAME = 'hannerjhossue-debug';
-const GITHUB_REPO = 'Miku-landing'; // El repo del dashboard
-
-// Recupera el token guardado en el teléfono, si no existe, lo solicita
-let GITHUB_TOKEN = localStorage.getItem('miku_github_token');
-
-if (!GITHUB_TOKEN) {
-    GITHUB_TOKEN = prompt('Ingresa tu Personal Access Token de GitHub (se guardará de forma segura en tu navegador):');
-    if (GITHUB_TOKEN) {
-        localStorage.setItem('miku_github_token', GITHUB_TOKEN.trim());
-    }
-    }
-    // Cargar configuración existente al abrir la página
-    async function cargarConfiguracionInicial() {
-        try {
-            const res = await fetch(`https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/main/config.json?t=${Date.now()}`);
-            if (res.ok) {
-                const config = await res.json();
-                document.getElementById('toggleBot').checked = config.botActivo !== false;
-                document.getElementById('toggleAntiLinks').checked = config.antiLinks === true;
-                
-                const badge = document.getElementById('badgeEstadoGrupo');
-                if (badge) {
-                    badge.className = config.botActivo ? 'badge-active' : 'badge-off';
-                    badge.innerText = config.botActivo ? 'ACTIVO' : 'APAGADO';
-                }
-            }
-        } catch (e) {
-            console.log('Cargando valores por defecto...');
-        }
-    }
+    // 📌 CONFIGURACIÓN DE TU BOT
+    // Reemplaza esta URL por el puerto/dominio público donde corre tu bot en SkyUltraPlus
+    const API_BOT_URL = 'https://panel.skyultraplus.com/server/f5682e0c/console'; 
 
     function actualizarSeleccionUI() {
+        const selectGrupo = document.getElementById('selectGrupo');
+        const nombreGrupo = selectGrupo.options[selectGrupo.selectedIndex].text;
+        const idGrupo = selectGrupo.value;
+
+        document.getElementById('nombreGrupoActual').innerText = nombreGrupo;
+        document.getElementById('idGrupoActual').innerText = idGrupo;
         document.getElementById('mensajeFeedback').innerText = '';
     }
 
-    // Guardar configuración modificando el config.json en GitHub
     async function guardarConfiguracion() {
         const selectGrupo = document.getElementById('selectGrupo');
-        const nombreGrupo = selectGrupo.options[selectGrupo.selectedIndex].text;
-        
+        const groupId = selectGrupo.value;
         const botActivo = document.getElementById('toggleBot').checked;
         const antiLinks = document.getElementById('toggleAntiLinks').checked;
         const feedback = document.getElementById('mensajeFeedback');
+        const badge = document.getElementById('badgeEstadoGrupo');
 
         feedback.style.color = 'var(--accent-cyan)';
-        feedback.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando cambios en GitHub...';
+        feedback.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
 
         try {
-            // 1. Obtener el SHA actual del archivo config.json
-            const getRes = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/config.json`, {
-                headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
-            });
-            
-            if (!getRes.ok) {
-                throw new Error('No se encontró el archivo config.json en tu repositorio.');
-            }
-
-            const fileData = await getRes.json();
-            const sha = fileData.sha;
-
-            // 2. Preparar el nuevo contenido JSON
-            const nuevoContenido = JSON.stringify({ botActivo, antiLinks }, null, 2);
-            
-            // Convertir a Base64 de forma compatible con UTF-8
-            const contentBase64 = btoa(unescape(encodeURIComponent(nuevoContenido)));
-
-            // 3. Enviar actualización a la API de GitHub
-            const updateRes = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/config.json`, {
-                method: 'PUT',
+            const res = await fetch(`${API_BOT_URL}/api/config-grupo`, {
+                method: 'POST',
                 headers: {
-                    'Authorization': `token ${GITHUB_TOKEN}`,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    message: `Actualización de configuración para ${nombreGrupo}`,
-                    content: contentBase64,
-                    sha: sha
+                    groupId: groupId,
+                    botActivo: botActivo,
+                    antiLinks: antiLinks
                 })
             });
 
-            if (updateRes.ok) {
-                feedback.style.color = 'var(--success)';
-                feedback.innerHTML = `<i class="fa-solid fa-circle-check"></i> ¡Guardado en GitHub! El bot sincronizará en segundos.`;
+            const data = await res.json();
 
-                const badge = document.getElementById('badgeEstadoGrupo');
-                if (badge) {
-                    badge.className = botActivo ? 'badge-active' : 'badge-off';
-                    badge.innerText = botActivo ? 'ACTIVO' : 'APAGADO';
+            if (res.ok && data.status === 'ok') {
+                feedback.style.color = '#10b981';
+                feedback.innerText = '✅ ¡Sincronizado al instante con el Bot!';
+
+                // Actualizar badge visual
+                if (botActivo) {
+                    badge.className = 'status-badge badge-active';
+                    badge.innerText = 'ACTIVO';
+                } else {
+                    badge.className = 'status-badge badge-off';
+                    badge.innerText = 'APAGADO';
                 }
             } else {
-                throw new Error('GitHub rechazó la actualización. Revisa tu Token.');
+                throw new Error(data.message || 'Error del servidor');
             }
-
-        } catch (error) {
-            console.error('Error al guardar en GitHub:', error);
-            feedback.style.color = 'var(--danger)';
-            feedback.innerHTML = `⚠️ ${error.message}`;
+        } catch (err) {
+            console.error(err);
+            feedback.style.color = '#ef4444';
+            feedback.innerText = '❌ No se pudo conectar con el bot. Verifica la URL de la API.';
         }
     }
-
-    // Iniciar al cargar la web
-    window.onload = cargarConfiguracionInicial;
 </script>
 
 </body>
