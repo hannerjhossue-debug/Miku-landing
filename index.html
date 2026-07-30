@@ -10,7 +10,6 @@
             --bg-dark: #0f172a;
             --card-bg: #1e293b;
             --accent-cyan: #38bdf8;
-            --accent-pink: #ec4899;
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
         }
@@ -27,7 +26,7 @@
 
         .container {
             width: 100%;
-            max-width: 500px;
+            max-width: 480px;
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -50,44 +49,18 @@
             color: var(--accent-cyan);
         }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-            color: var(--text-sub);
-        }
-
-        select {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            outline: none;
-            font-size: 1rem;
-        }
-
         .toggle-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 0;
+            padding: 14px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .toggle-label {
-            display: flex;
-            flex-direction: column;
         }
 
         .toggle-title {
             font-weight: 600;
             font-size: 0.95rem;
+            display: block;
         }
 
         .toggle-desc {
@@ -147,7 +120,7 @@
             font-weight: bold;
             font-size: 1rem;
             cursor: pointer;
-            margin-top: 15px;
+            margin-top: 20px;
             transition: opacity 0.2s;
         }
 
@@ -156,7 +129,7 @@
         }
 
         #mensajeFeedback {
-            margin-top: 12px;
+            margin-top: 14px;
             font-size: 0.85rem;
             text-align: center;
             min-height: 20px;
@@ -178,19 +151,12 @@
 
 <div class="container">
     <div class="card">
-        <h2><i class="fa-solid fa-sliders"></i> Ajustes del Grupo</h2>
-
-        <div class="form-group">
-            <label for="selectGrupo"><i class="fa-solid fa-users"></i> Seleccionar Chat / Grupo:</label>
-            <select id="selectGrupo" onchange="actualizarSeleccionUI()">
-                <option value="1203630XXXXX@g.us">Pruebas bot (Grupo Principal)</option>
-            </select>
-        </div>
+        <h2><i class="fa-solid fa-sliders"></i> Control General del Bot</h2>
 
         <div class="toggle-container">
-            <div class="toggle-label">
+            <div>
                 <span class="toggle-title">Encender / Apagar Bot</span>
-                <span class="toggle-desc">Habilita o deshabilita las respuestas de comandos</span>
+                <span class="toggle-desc">Habilita o deshabilita los comandos</span>
             </div>
             <label class="switch">
                 <input type="checkbox" id="toggleBot" checked>
@@ -199,9 +165,9 @@
         </div>
 
         <div class="toggle-container">
-            <div class="toggle-label">
+            <div>
                 <span class="toggle-title">Filtro Anti-Enlaces (AntiLinks)</span>
-                <span class="toggle-desc">Borra automáticamente los links enviadas al chat</span>
+                <span class="toggle-desc">Borra automáticamente los links en el chat</span>
             </div>
             <label class="switch">
                 <input type="checkbox" id="toggleAntiLinks">
@@ -217,11 +183,11 @@
     </div>
 
     <div class="card">
-        <h2><i class="fa-solid fa-list-check"></i> Estado del Bot</h2>
+        <h2><i class="fa-solid fa-list-check"></i> Estado Actual</h2>
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <div>
-                <strong id="nombreGrupoActual">Pruebas bot</strong><br>
-                <small style="color: var(--text-sub);" id="idGrupoActual">1203630XXXXX@g.us</small>
+                <strong>Hatsune Miku Bot</strong><br>
+                <small style="color: var(--text-sub);">Sincronización Web</small>
             </div>
             <span id="badgeEstadoGrupo" class="status-badge badge-active">ACTIVO</span>
         </div>
@@ -229,68 +195,92 @@
 </div>
 
 <script>
-    // 📌 CONFIGURACIÓN DE TU BOT
-    // Reemplaza esta URL por el puerto/dominio público donde corre tu bot en SkyUltraPlus
-    const API_BOT_URL = 'https://panel.skyultraplus.com/server/f5682e0c/console'; 
+    const BIN_URL = 'https://api.jsonbin.io/v3/b/6a6bb0d1f5f4af5e29d75982';
+    
+    // Al abrir la página, te pedirá tu Master Key una sola vez y la guardará segura en tu teléfono
+    let MASTER_KEY = localStorage.getItem('miku_jsonbin_key');
 
-    function actualizarSeleccionUI() {
-        const selectGrupo = document.getElementById('selectGrupo');
-        const nombreGrupo = selectGrupo.options[selectGrupo.selectedIndex].text;
-        const idGrupo = selectGrupo.value;
+    if (!MASTER_KEY) {
+        MASTER_KEY = prompt('Ingresa tu X-Master-Key de JSONBin (se guardará en tu navegador):');
+        if (MASTER_KEY) {
+            localStorage.setItem('miku_jsonbin_key', MASTER_KEY.trim());
+        }
+    }
 
-        document.getElementById('nombreGrupoActual').innerText = nombreGrupo;
-        document.getElementById('idGrupoActual').innerText = idGrupo;
-        document.getElementById('mensajeFeedback').innerText = '';
+    // Cargar estado inicial desde JSONBin al abrir la web
+    async function cargarEstadoInicial() {
+        if (!MASTER_KEY) return;
+        try {
+            const res = await fetch(`${BIN_URL}/latest`, {
+                headers: { 'X-Master-Key': MASTER_KEY }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                const config = data.record;
+                
+                document.getElementById('toggleBot').checked = config.botActivo !== false;
+                document.getElementById('toggleAntiLinks').checked = config.antiLinks === true;
+                actualizarBadge(config.botActivo !== false);
+            }
+        } catch (e) {
+            console.error('Error al cargar datos iniciales:', e);
+        }
+    }
+
+    function actualizarBadge(activo) {
+        const badge = document.getElementById('badgeEstadoGrupo');
+        if (activo) {
+            badge.className = 'status-badge badge-active';
+            badge.innerText = 'ACTIVO';
+        } else {
+            badge.className = 'status-badge badge-off';
+            badge.innerText = 'APAGADO';
+        }
     }
 
     async function guardarConfiguracion() {
-        const selectGrupo = document.getElementById('selectGrupo');
-        const groupId = selectGrupo.value;
+        if (!MASTER_KEY) {
+            alert('Necesitas ingresar tu Master Key para guardar.');
+            return;
+        }
+
         const botActivo = document.getElementById('toggleBot').checked;
         const antiLinks = document.getElementById('toggleAntiLinks').checked;
         const feedback = document.getElementById('mensajeFeedback');
-        const badge = document.getElementById('badgeEstadoGrupo');
 
         feedback.style.color = 'var(--accent-cyan)';
-        feedback.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
+        feedback.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando cambios...';
 
         try {
-            const res = await fetch(`${API_BOT_URL}/api/config-grupo`, {
-                method: 'POST',
+            const res = await fetch(BIN_URL, {
+                method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': MASTER_KEY
                 },
                 body: JSON.stringify({
-                    groupId: groupId,
                     botActivo: botActivo,
                     antiLinks: antiLinks
                 })
             });
 
-            const data = await res.json();
-
-            if (res.ok && data.status === 'ok') {
+            if (res.ok) {
                 feedback.style.color = '#10b981';
-                feedback.innerText = '✅ ¡Sincronizado al instante con el Bot!';
-
-                // Actualizar badge visual
-                if (botActivo) {
-                    badge.className = 'status-badge badge-active';
-                    badge.innerText = 'ACTIVO';
-                } else {
-                    badge.className = 'status-badge badge-off';
-                    badge.innerText = 'APAGADO';
-                }
+                feedback.innerText = '✅ ¡Cambios guardados con éxito!';
+                actualizarBadge(botActivo);
             } else {
-                throw new Error(data.message || 'Error del servidor');
+                throw new Error('Error en la API');
             }
         } catch (err) {
             console.error(err);
             feedback.style.color = '#ef4444';
-            feedback.innerText = '❌ No se pudo conectar con el bot. Verifica la URL de la API.';
+            feedback.innerText = '❌ Error al guardar. Revisa tu Master Key.';
         }
     }
+
+    // Ejecutar carga inicial
+    cargarEstadoInicial();
 </script>
 
 </body>
-    </html>
+            </html>
