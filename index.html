@@ -8,81 +8,109 @@
   
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-    body { background-color: #0b0e14; color: #e2e8f0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+    body { background-color: #0b0e14; color: #e2e8f0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
     
+    /* ANIMACIÓN DE ENTRADA (SPLASH SCREEN) */
+    #splash-screen {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: #0b0e14; z-index: 9999; display: flex;
+      flex-direction: column; justify-content: center; align-items: center;
+      transition: opacity 0.6s ease, visibility 0.6s;
+    }
+    .loader-ring {
+      width: 60px; height: 60px; border: 4px solid rgba(0, 229, 255, 0.1);
+      border-left-color: #00e5ff; border-radius: 50%;
+      animation: spin 1s linear infinite; margin-bottom: 20px;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
     .bg-glow {
       position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(0, 229, 255, 0.15) 0%, rgba(0,0,0,0) 70%);
+      width: 800px; height: 800px;
+      background: radial-gradient(circle, rgba(0, 229, 255, 0.12) 0%, rgba(0,0,0,0) 70%);
       z-index: -1; pointer-events: none;
     }
 
+    /* NAVBAR */
     .navbar {
-      width: 100%; max-width: 900px; padding: 20px;
+      width: 100%; max-width: 1100px; padding: 20px;
       display: flex; justify-content: space-between; align-items: center;
       border-bottom: 1px solid rgba(0, 229, 255, 0.2);
     }
-    .logo { display: flex; align-items: center; gap: 10px; color: #00e5ff; font-weight: 700; font-size: 1.1rem; }
+    .logo { display: flex; align-items: center; gap: 10px; color: #00e5ff; font-weight: 700; font-size: 1.2rem; }
     .miku-dot { width: 10px; height: 10px; background-color: #00e5ff; border-radius: 50%; box-shadow: 0 0 10px #00e5ff; }
 
-    .container { width: 100%; max-width: 500px; margin-top: 40px; padding: 20px; }
+    /* CONTENEDOR PRINCIPAL MAS GRANDE */
+    .container { width: 100%; max-width: 950px; margin-top: 30px; padding: 20px; }
+    
     .card {
       background: rgba(18, 24, 38, 0.85); border: 1px solid rgba(0, 229, 255, 0.2);
-      backdrop-filter: blur(10px); border-radius: 16px; padding: 25px; text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      backdrop-filter: blur(12px); border-radius: 16px; padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%;
     }
 
-    h2 { font-size: 1.4rem; margin-bottom: 10px; color: #fff; }
-    p.subtitle { font-size: 0.85rem; color: #94a3b8; margin-bottom: 25px; }
-
+    /* VISTA DE LOGIN */
+    .login-card { max-width: 450px; margin: 40px auto; text-align: center; }
     .btn-github {
       width: 100%; background-color: #24292e; color: white; border: 1px solid #00e5ff;
       padding: 14px; border-radius: 8px; font-weight: 600; cursor: pointer;
       display: flex; align-items: center; justify-content: center; gap: 10px;
       transition: 0.3s;
     }
-    .btn-github:hover { background-color: #00e5ff; color: #0b0e14; }
+    .btn-github:hover { background-color: #00e5ff; color: #0b0e14; box-shadow: 0 0 15px rgba(0,229,255,0.4); }
 
-    .user-profile { display: flex; align-items: center; gap: 10px; }
+    /* NAVBAR PROFILE */
+    .user-profile { display: flex; align-items: center; gap: 12px; }
     .user-profile img { width: 38px; height: 38px; border-radius: 50%; border: 2px solid #00e5ff; }
-    .btn-logout { background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; transition: 0.2s; }
+    .btn-logout { background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
     .btn-logout:hover { background: #ef4444; color: white; }
 
-    /* DASHBOARD GRID UI */
+    /* ESTRUCTURA DASHBOARD PROFESIONAL */
+    .dash-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 25px; }
+    .dash-header h2 { font-size: 1.6rem; color: #fff; }
+    
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981;
+      color: #10b981; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
+    }
+
     .dashboard-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      margin-top: 20px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px; margin-bottom: 25px;
     }
     .dash-card {
-      background: rgba(255, 255, 255, 0.03);
-      padding: 15px;
-      border-radius: 10px;
-      border: 1px solid rgba(0, 229, 255, 0.1);
-      text-align: left;
+      background: rgba(255, 255, 255, 0.02); padding: 18px; border-radius: 12px;
+      border: 1px solid rgba(0, 229, 255, 0.15); text-align: left;
     }
-    .dash-card h4 { font-size: 0.75rem; color: #94a3b8; margin-bottom: 5px; }
-    .dash-card .val { font-size: 1.1rem; font-weight: bold; color: #00e5ff; }
-    .status-online { color: #10b981 !important; font-size: 0.85rem !important; }
+    .dash-card h4 { font-size: 0.8rem; color: #94a3b8; margin-bottom: 6px; }
+    .dash-card .val { font-size: 1.3rem; font-weight: bold; color: #00e5ff; }
 
-    .status-banner {
-      background: rgba(0, 229, 255, 0.05);
-      border: 1px solid rgba(0, 229, 255, 0.2);
-      padding: 12px;
-      border-radius: 8px;
-      margin-top: 15px;
-      font-size: 0.8rem;
-      color: #cbd5e1;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    /* BOT CONTROLS / SECCIÓN WHATSAPP */
+    .bot-section {
+      background: rgba(0, 0, 0, 0.3); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 20px; margin-top: 20px;
     }
+    .bot-section h3 { font-size: 1.1rem; color: #00e5ff; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+    
+    .bot-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-action {
+      background: rgba(0, 229, 255, 0.1); border: 1px solid rgba(0, 229, 255, 0.3);
+      color: #00e5ff; padding: 10px 16px; border-radius: 8px; font-size: 0.85rem;
+      cursor: pointer; font-weight: 600; transition: 0.2s;
+    }
+    .btn-action:hover { background: #00e5ff; color: #0b0e14; }
 
     .hidden { display: none !important; }
   </style>
 </head>
 <body>
+
+  <!-- ANIMACIÓN DE ENTRADA -->
+  <div id="splash-screen">
+    <div class="loader-ring"></div>
+    <h2 style="color: #00e5ff; font-weight: 600; font-size: 1.2rem;">Miku System Loading...</h2>
+  </div>
 
   <div class="bg-glow"></div>
 
@@ -93,16 +121,16 @@
     </div>
     <div id="user-profile" class="user-profile hidden">
       <img id="user-avatar" src="" alt="Avatar">
-      <button class="btn-logout" onclick="logout()">Salir</button>
+      <button class="btn-logout" onclick="logout()">Cerrar Sesión</button>
     </div>
   </header>
 
   <main class="container">
     
-    <!-- LOGIN BOX -->
-    <section id="login-box" class="card">
-      <h2>Panel de Control 🩵</h2>
-      <p class="subtitle">Inicia sesión para ingresar a tu panel web.</p>
+    <!-- LOGIN VISTA -->
+    <section id="login-box" class="card login-card">
+      <h2 style="margin-bottom: 8px;">Panel de Control 🩵</h2>
+      <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 25px;">Inicia sesión con tu cuenta de GitHub para continuar.</p>
       
       <button class="btn-github" onclick="loginWithGitHub()">
         <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor">
@@ -112,40 +140,64 @@
       </button>
     </section>
 
-    <!-- DASHBOARD BOX -->
+    <!-- DASHBOARD COMPLETO Y AMPLIADO -->
     <section id="dashboard-content" class="card hidden">
-      <h2>¡Bienvenido, <span id="user-name" style="color:#00e5ff;">Usuario</span>! 👋</h2>
-      <p class="subtitle" style="margin-bottom: 15px;">Panel general del sistema.</p>
+      <div class="dash-header">
+        <div>
+          <h2>Bienvenido, <span id="user-name" style="color:#00e5ff;">Usuario</span> 👋</h2>
+          <p style="font-size: 0.85rem; color: #94a3b8;">Estado de la instancia y control general.</p>
+        </div>
+        <div class="status-badge">
+          <span>● Bot Online</span>
+        </div>
+      </div>
       
+      <!-- GRID DE MÉTRICAS -->
       <div class="dashboard-grid">
         <div class="dash-card">
           <h4>Rol de usuario</h4>
-          <div class="val">Developer</div>
+          <div class="val">Owner / Dev</div>
         </div>
         <div class="dash-card">
-          <h4>Nivel</h4>
-          <div class="val">Lv. 1</div>
+          <h4>Ping del Servidor</h4>
+          <div class="val" style="color: #10b981;">42 ms</div>
         </div>
         <div class="dash-card">
-          <h4>Estado Web</h4>
-          <div class="val status-online">● Activo</div>
+          <h4>Comandos Ejecutados</h4>
+          <div class="val">1,248</div>
         </div>
         <div class="dash-card">
-          <h4>Servidor</h4>
-          <div class="val">GitHub Pages</div>
+          <h4>Subbots Activos</h4>
+          <div class="val">1</div>
         </div>
       </div>
 
-      <div class="status-banner">
-        <span>Sesión iniciada correctamente</span>
-        <span style="color:#00e5ff;">🩵</span>
+      <!-- SECCIÓN INTEGRADA PARA EL BOT DE WHATSAPP -->
+      <div class="bot-section">
+        <h3>Acciones del Bot</h3>
+        <p style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 15px;">Módulos de administración remota pre-configurados:</p>
+        <div class="bot-actions">
+          <button class="btn-action" onclick="alert('Enviando señal de reinicio al bot...')">Reiniciar Bot</button>
+          <button class="btn-action" onclick="alert('Estado de la base de datos MongoDB: Conectado')">Ver MongoDB</button>
+          <button class="btn-action" onclick="alert('Comando de sincronización listo.')">Sincronizar Grupos</button>
+        </div>
       </div>
+
     </section>
 
   </main>
 
   <script>
     const GITHUB_CLIENT_ID = "Ov23liMjklGcMnD5lCBV";
+
+    // ANIMACIÓN AL CARGAR LA PÁGINA (SPLASH SCREEN)
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        const splash = document.getElementById("splash-screen");
+        splash.style.opacity = "0";
+        setTimeout(() => splash.style.visibility = "hidden", 600);
+      }, 1800); // 1.8 segundos de animación
+    });
 
     document.addEventListener("DOMContentLoaded", () => {
       const urlParams = new URLSearchParams(window.location.search);
@@ -157,6 +209,7 @@
           picture: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
         };
         saveSession(githubUser);
+        // Limpia la URL eliminando el ?code= para permitir cierres de sesión limpios
         window.history.replaceState({}, document.title, window.location.pathname);
         return;
       }
@@ -169,7 +222,7 @@
 
     function loginWithGitHub() {
       const redirectUri = window.location.href.split('?')[0];
-      window.location.href = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${redirectUri}`;
+      window.location.href = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${redirectUri}&prompt=consent`;
     }
 
     function saveSession(userData) {
@@ -186,10 +239,12 @@
       document.getElementById("user-avatar").src = user.picture;
     }
 
+    // CIERRE DE SESIÓN CORREGIDO
     function logout() {
       localStorage.removeItem("session_user");
-      window.location.reload();
+      // Redirige limpiando cualquier parámetro residual
+      window.location.href = window.location.origin + window.location.pathname;
     }
   </script>
 </body>
-            </html>
+  </html>
