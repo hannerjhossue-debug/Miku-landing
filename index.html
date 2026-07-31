@@ -37,6 +37,7 @@
       position: fixed; top: 0; left: -280px; width: 280px; height: 100vh;
       background: #121826; border-right: 1px solid rgba(0, 229, 255, 0.2);
       z-index: 201; transition: 0.3s ease; padding: 20px; display: flex; flex-direction: column;
+      overflow-y: auto;
     }
     .sidebar.active { left: 0; }
 
@@ -68,7 +69,7 @@
     .dash-card h4 { font-size: 0.7rem; color: #94a3b8; }
     .dash-card .val { font-size: 0.95rem; font-weight: bold; color: #00e5ff; margin-top: 2px; }
 
-    /* SECCIÓN REDES SOCIALES */
+    /* SECCIÓN REDES SOCIALES PANEL */
     .social-grid { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
     .social-btn {
       flex: 1; min-width: 45%; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 229, 255, 0.2);
@@ -105,7 +106,7 @@
     .btn-send { background: #00e5ff; color: #0b0e14; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; }
     .btn-cancel { background: transparent; color: #94a3b8; border: 1px solid #64748b; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
 
-    /* NOTIFICACIÓN PERSONALIZADA (REEMPLAZO DE ALERT GOOGLE) */
+    /* NOTIFICACIÓN PERSONALIZADA */
     .custom-toast {
       position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
       background: #00e5ff; color: #0b0e14; padding: 10px 20px; border-radius: 20px;
@@ -170,6 +171,31 @@
         <i class="fa-solid fa-comment"></i> Feedback
       </div>
     </div>
+
+    <!-- CATEGORÍA REDES SOCIALES EN MENÚ LATERAL -->
+    <div class="sidebar-group">
+      <div class="sidebar-title">Redes Sociales</div>
+      <a class="sidebar-item" href="https://www.instagram.com/hatsune.miku_07?igsh=Y2E4aDN6ZjMxcjI4" target="_blank" onclick="toggleSidebar()">
+        <i class="fa-brands fa-instagram"></i> Instagram
+      </a>
+      <a class="sidebar-item" href="https://wa.me/584148014097" target="_blank" onclick="toggleSidebar()">
+        <i class="fa-brands fa-whatsapp"></i> Número Bot
+      </a>
+      <a class="sidebar-item" href="https://youtube.com/@jhossuehanner?si=FF3niC3lagtMrHqx" target="_blank" onclick="toggleSidebar()">
+        <i class="fa-brands fa-youtube"></i> YouTube
+      </a>
+      <a class="sidebar-item" href="https://github.com/hannerjhossue-debug/Proyecto1.git" target="_blank" onclick="toggleSidebar()">
+        <i class="fa-brands fa-github"></i> Repositorio GitHub
+      </a>
+    </div>
+
+    <!-- CATEGORÍA CONTACTO CON STAFF EN MENÚ LATERAL -->
+    <div class="sidebar-group">
+      <div class="sidebar-title">Contacto</div>
+      <a class="sidebar-item" href="https://wa.me/584148014097?text=Hola,%20necesito%20contactar%20con%20el%20Staff%20del%20bot" target="_blank" onclick="toggleSidebar()">
+        <i class="fa-solid fa-headset"></i> Contactar Staff
+      </a>
+    </div>
   </aside>
 
   <!-- CONTENIDO PRINCIPAL -->
@@ -211,21 +237,21 @@
         </div>
       </div>
 
-      <!-- SECCIÓN REDES SOCIALES Y REPOSITORIO -->
+      <!-- SECCIÓN REDES SOCIALES PANEL -->
       <div style="margin-top: 15px; border-top: 1px solid rgba(0,229,255,0.1); padding-top: 12px;">
         <h4 style="font-size: 0.8rem; color: #94a3b8;">Comunidad y Código</h4>
         <div class="social-grid">
-          <a class="social-btn" href="https://github.com/hannerjhossue-debug/Proyecto1" target="_blank">
+          <a class="social-btn" href="https://github.com/hannerjhossue-debug/Proyecto1.git" target="_blank">
             <i class="fa-brands fa-github"></i> Repositorio
           </a>
-          <a class="social-btn" href="https://chat.whatsapp.com/TU_GRUPO" target="_blank">
+          <a class="social-btn" href="https://wa.me/584148014097" target="_blank">
             <i class="fa-brands fa-whatsapp"></i> WhatsApp
           </a>
-          <a class="social-btn" href="https://youtube.com" target="_blank">
+          <a class="social-btn" href="https://youtube.com/@jhossuehanner?si=FF3niC3lagtMrHqx" target="_blank">
             <i class="fa-brands fa-youtube"></i> YouTube
           </a>
-          <a class="social-btn" href="https://discord.com" target="_blank">
-            <i class="fa-brands fa-discord"></i> Discord
+          <a class="social-btn" href="https://www.instagram.com/hatsune.miku_07?igsh=Y2E4aDN6ZjMxcjI4" target="_blank">
+            <i class="fa-brands fa-instagram"></i> Instagram
           </a>
         </div>
       </div>
@@ -284,7 +310,6 @@
       const githubCode = urlParams.get('code');
 
       if (githubCode) {
-        // Al iniciar sesión, asignamos el nombre de usuario
         const githubUser = { name: "hannerjhossue-debug" };
         saveSession(githubUser);
         window.history.replaceState({}, document.title, window.location.pathname);
@@ -311,7 +336,6 @@
       document.getElementById("user-profile").classList.remove("hidden");
       document.getElementById("user-name").textContent = user.name;
 
-      // LÓGICA DE ROLES: Define Owner si coincide con tu usuario, o Usuario por defecto
       const roleElement = document.getElementById("user-role");
       if (user.name.toLowerCase().includes("hannerjhossue") || user.name === "Owner") {
         roleElement.textContent = "Owner / Dev";
@@ -393,4 +417,4 @@
     }
   </script>
 </body>
-  </html>
+        </html>
