@@ -2,114 +2,101 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Miku Bot Dashboard 🩵</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-    body { background-color: #0b0e14; color: #e2e8f0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
+    html, body { width: 100%; min-height: 100vh; background-color: #0b0e14; color: #e2e8f0; overflow-x: hidden; }
     
-    /* ANIMACIÓN DE ENTRADA (SPLASH SCREEN) */
+    /* ANIMACIÓN DE ENTRADA (Miku & Cebollín / Negi) */
     #splash-screen {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       background: #0b0e14; z-index: 9999; display: flex;
       flex-direction: column; justify-content: center; align-items: center;
-      transition: opacity 0.6s ease, visibility 0.6s;
+      transition: opacity 0.5s ease, visibility 0.5s;
     }
-    .loader-ring {
-      width: 60px; height: 60px; border: 4px solid rgba(0, 229, 255, 0.1);
-      border-left-color: #00e5ff; border-radius: 50%;
-      animation: spin 1s linear infinite; margin-bottom: 20px;
+    
+    .negi-container { position: relative; width: 100px; height: 100px; margin-bottom: 15px; display: flex; justify-content: center; align-items: center; }
+    .negi-icon { font-size: 60px; animation: bite 1.8s infinite steps(1); }
+    
+    @keyframes bite {
+      0%   { content: "🥬"; transform: rotate(0deg); }
+      33%  { content: "🥦"; transform: rotate(-10deg) scale(0.9); }
+      66%  { content: "🌱"; transform: rotate(10deg) scale(0.8); }
+      100% { content: "✨"; transform: scale(1.1); }
     }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
     .bg-glow {
-      position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
-      width: 800px; height: 800px;
-      background: radial-gradient(circle, rgba(0, 229, 255, 0.12) 0%, rgba(0,0,0,0) 70%);
+      position: absolute; top: -50px; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 500px; height: 300px;
+      background: radial-gradient(circle, rgba(0, 229, 255, 0.15) 0%, rgba(0,0,0,0) 70%);
       z-index: -1; pointer-events: none;
     }
 
-    /* NAVBAR */
+    /* NAVBAR RESPONSIVA */
     .navbar {
-      width: 100%; max-width: 1100px; padding: 20px;
+      width: 100%; padding: 15px 20px;
       display: flex; justify-content: space-between; align-items: center;
       border-bottom: 1px solid rgba(0, 229, 255, 0.2);
     }
-    .logo { display: flex; align-items: center; gap: 10px; color: #00e5ff; font-weight: 700; font-size: 1.2rem; }
-    .miku-dot { width: 10px; height: 10px; background-color: #00e5ff; border-radius: 50%; box-shadow: 0 0 10px #00e5ff; }
+    .logo { display: flex; align-items: center; gap: 8px; color: #00e5ff; font-weight: 700; font-size: 1rem; }
+    .miku-dot { width: 8px; height: 8px; background-color: #00e5ff; border-radius: 50%; box-shadow: 0 0 8px #00e5ff; }
 
-    /* CONTENEDOR PRINCIPAL MAS GRANDE */
-    .container { width: 100%; max-width: 950px; margin-top: 30px; padding: 20px; }
-    
+    .user-profile { display: flex; align-items: center; gap: 8px; }
+    .btn-logout { background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; }
+
+    /* CONTENEDOR MÓVIL EXACTO */
+    .main-wrapper { width: 100%; max-width: 480px; margin: 0 auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
+
     .card {
       background: rgba(18, 24, 38, 0.85); border: 1px solid rgba(0, 229, 255, 0.2);
-      backdrop-filter: blur(12px); border-radius: 16px; padding: 30px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%;
+      backdrop-filter: blur(10px); border-radius: 14px; padding: 20px; width: 100%;
     }
 
-    /* VISTA DE LOGIN */
-    .login-card { max-width: 450px; margin: 40px auto; text-align: center; }
-    .btn-github {
-      width: 100%; background-color: #24292e; color: white; border: 1px solid #00e5ff;
-      padding: 14px; border-radius: 8px; font-weight: 600; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-      transition: 0.3s;
-    }
-    .btn-github:hover { background-color: #00e5ff; color: #0b0e14; box-shadow: 0 0 15px rgba(0,229,255,0.4); }
+    /* NAVEGACIÓN POR APARTADOS (PESTAÑAS) */
+    .tab-menu { display: flex; gap: 8px; background: rgba(255, 255, 255, 0.03); padding: 5px; border-radius: 10px; border: 1px solid rgba(0, 229, 255, 0.1); }
+    .tab-btn { flex: 1; background: transparent; border: none; color: #94a3b8; padding: 8px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; cursor: pointer; transition: 0.3s; }
+    .tab-btn.active { background: #00e5ff; color: #0b0e14; }
 
-    /* NAVBAR PROFILE */
-    .user-profile { display: flex; align-items: center; gap: 12px; }
-    .user-profile img { width: 38px; height: 38px; border-radius: 50%; border: 2px solid #00e5ff; }
-    .btn-logout { background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
-    .btn-logout:hover { background: #ef4444; color: white; }
+    /* GRID MÓVIL */
+    .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+    .dash-card { background: rgba(255, 255, 255, 0.02); padding: 12px; border-radius: 10px; border: 1px solid rgba(0, 229, 255, 0.1); }
+    .dash-card h4 { font-size: 0.7rem; color: #94a3b8; }
+    .dash-card .val { font-size: 1rem; font-weight: bold; color: #00e5ff; margin-top: 2px; }
 
-    /* ESTRUCTURA DASHBOARD PROFESIONAL */
-    .dash-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 25px; }
-    .dash-header h2 { font-size: 1.6rem; color: #fff; }
+    /* SISTEMA BOTSITOS Y SUBBOTS */
+    .tier-box { background: rgba(0, 229, 255, 0.03); border: 1px solid rgba(0, 229, 255, 0.15); border-radius: 10px; padding: 12px; margin-top: 10px; }
+    .tier-title { font-size: 0.85rem; font-weight: 600; color: #00e5ff; margin-bottom: 4px; }
+    .tier-desc { font-size: 0.75rem; color: #94a3b8; line-height: 1.3; }
+
+    /* CARRUSEL INFINITO ESTILO MONGODB */
+    .carousel-section { width: 100%; overflow: hidden; padding: 15px 0; position: relative; margin-top: 10px; }
+    .carousel-track { display: flex; width: calc(120px * 10); animation: scroll 15s linear infinite; gap: 15px; }
+    .carousel-item { width: 100px; height: 40px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 229, 255, 0.15); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; color: #cbd5e1; }
     
-    .status-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981;
-      color: #10b981; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(calc(-115px * 5)); }
     }
 
-    .dashboard-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px; margin-bottom: 25px;
-    }
-    .dash-card {
-      background: rgba(255, 255, 255, 0.02); padding: 18px; border-radius: 12px;
-      border: 1px solid rgba(0, 229, 255, 0.15); text-align: left;
-    }
-    .dash-card h4 { font-size: 0.8rem; color: #94a3b8; margin-bottom: 6px; }
-    .dash-card .val { font-size: 1.3rem; font-weight: bold; color: #00e5ff; }
+    /* FOOTER */
+    footer { text-align: center; padding: 20px; font-size: 0.75rem; color: #64748b; border-top: 1px solid rgba(255, 255, 255, 0.05); margin-top: auto; }
+    footer span { color: #00e5ff; font-weight: 600; }
 
-    /* BOT CONTROLS / SECCIÓN WHATSAPP */
-    .bot-section {
-      background: rgba(0, 0, 0, 0.3); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05);
-      padding: 20px; margin-top: 20px;
-    }
-    .bot-section h3 { font-size: 1.1rem; color: #00e5ff; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
-    
-    .bot-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-    .btn-action {
-      background: rgba(0, 229, 255, 0.1); border: 1px solid rgba(0, 229, 255, 0.3);
-      color: #00e5ff; padding: 10px 16px; border-radius: 8px; font-size: 0.85rem;
-      cursor: pointer; font-weight: 600; transition: 0.2s;
-    }
-    .btn-action:hover { background: #00e5ff; color: #0b0e14; }
-
+    .btn-github { width: 100%; background: #24292e; color: white; border: 1px solid #00e5ff; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
-  <!-- ANIMACIÓN DE ENTRADA -->
+  <!-- ANIMACIÓN MIKU Y CEBOLLÍN -->
   <div id="splash-screen">
-    <div class="loader-ring"></div>
-    <h2 style="color: #00e5ff; font-weight: 600; font-size: 1.2rem;">Miku System Loading...</h2>
+    <div class="negi-container">
+      <span class="negi-icon">🥬</span>
+    </div>
+    <h3 style="color: #00e5ff; font-size: 0.9rem; font-weight: 600;">Cargando Miku Dashboard...</h3>
   </div>
 
   <div class="bg-glow"></div>
@@ -120,83 +107,110 @@
       <span>Miku Dashboard</span>
     </div>
     <div id="user-profile" class="user-profile hidden">
-      <img id="user-avatar" src="" alt="Avatar">
-      <button class="btn-logout" onclick="logout()">Cerrar Sesión</button>
+      <button class="btn-logout" onclick="logout()">Salir</button>
     </div>
   </header>
 
-  <main class="container">
+  <div class="main-wrapper">
     
     <!-- LOGIN VISTA -->
-    <section id="login-box" class="card login-card">
-      <h2 style="margin-bottom: 8px;">Panel de Control 🩵</h2>
-      <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 25px;">Inicia sesión con tu cuenta de GitHub para continuar.</p>
-      
+    <section id="login-box" class="card" style="text-align: center; margin-top: 20px;">
+      <h2 style="font-size: 1.2rem; margin-bottom: 5px;">Bienvenido 🩵</h2>
+      <p style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 20px;">Inicia sesión para gestionar tus servicios.</p>
       <button class="btn-github" onclick="loginWithGitHub()">
-        <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor">
+        <svg height="18" width="18" viewBox="0 0 16 16" fill="currentColor">
           <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
         </svg>
         Entrar con GitHub
       </button>
     </section>
 
-    <!-- DASHBOARD COMPLETO Y AMPLIADO -->
+    <!-- DASHBOARD PRINCIPAL CON PESTAÑAS -->
     <section id="dashboard-content" class="card hidden">
-      <div class="dash-header">
-        <div>
-          <h2>Bienvenido, <span id="user-name" style="color:#00e5ff;">Usuario</span> 👋</h2>
-          <p style="font-size: 0.85rem; color: #94a3b8;">Estado de la instancia y control general.</p>
-        </div>
-        <div class="status-badge">
-          <span>● Bot Online</span>
-        </div>
-      </div>
       
-      <!-- GRID DE MÉTRICAS -->
-      <div class="dashboard-grid">
-        <div class="dash-card">
-          <h4>Rol de usuario</h4>
-          <div class="val">Owner / Dev</div>
-        </div>
-        <div class="dash-card">
-          <h4>Ping del Servidor</h4>
-          <div class="val" style="color: #10b981;">42 ms</div>
-        </div>
-        <div class="dash-card">
-          <h4>Comandos Ejecutados</h4>
-          <div class="val">1,248</div>
-        </div>
-        <div class="dash-card">
-          <h4>Subbots Activos</h4>
-          <div class="val">1</div>
+      <!-- MENU DE PESTAÑAS -->
+      <div class="tab-menu">
+        <button class="tab-btn active" onclick="switchTab('general')">General</button>
+        <button class="tab-btn" onclick="switchTab('planes')">Botsitos & Subbots</button>
+      </div>
+
+      <!-- APARTADO 1: GENERAL -->
+      <div id="tab-general" style="margin-top: 15px;">
+        <h3 style="font-size: 1rem;">Hola, <span id="user-name" style="color:#00e5ff;">Dev</span> 👋</h3>
+        <p style="font-size: 0.75rem; color: #94a3b8;">Estado del sistema y estadísticas.</p>
+        
+        <div class="dashboard-grid">
+          <div class="dash-card">
+            <h4>Rol</h4>
+            <div class="val">Developer</div>
+          </div>
+          <div class="dash-card">
+            <h4>Base de Datos</h4>
+            <div class="val" style="color: #10b981;">MongoDB</div>
+          </div>
+          <div class="dash-card">
+            <h4>Infraestructura</h4>
+            <div class="val">SKY Ultra Plus</div>
+          </div>
+          <div class="dash-card">
+            <h4>Red WhatsApp</h4>
+            <div class="val">Baileys API</div>
+          </div>
         </div>
       </div>
 
-      <!-- SECCIÓN INTEGRADA PARA EL BOT DE WHATSAPP -->
-      <div class="bot-section">
-        <h3>Acciones del Bot</h3>
-        <p style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 15px;">Módulos de administración remota pre-configurados:</p>
-        <div class="bot-actions">
-          <button class="btn-action" onclick="alert('Enviando señal de reinicio al bot...')">Reiniciar Bot</button>
-          <button class="btn-action" onclick="alert('Estado de la base de datos MongoDB: Conectado')">Ver MongoDB</button>
-          <button class="btn-action" onclick="alert('Comando de sincronización listo.')">Sincronizar Grupos</button>
+      <!-- APARTADO 2: PLANES Y SISTEMA DE BOTS -->
+      <div id="tab-planes" class="hidden" style="margin-top: 15px;">
+        <h3 style="font-size: 1rem; color: #00e5ff;">Ecosistema de Instancias</h3>
+        <p style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 10px;">Diferencias entre categorías de conexión.</p>
+
+        <div class="tier-box">
+          <div class="tier-title">🤖 Botsitos (Avanzado / DB Propia)</div>
+          <div class="tier-desc">Instancia independiente con base de datos MongoDB dedicada, funciones personalizadas y acceso directo al grupo de soporte comunitario.</div>
+        </div>
+
+        <div class="tier-box" style="border-color: rgba(255,255,255,0.1);">
+          <div class="tier-title" style="color: #e2e8f0;">⚡ Subbots (Lero / Estándar)</div>
+          <div class="tier-desc">Instancia compartida con funciones esenciales y límite de grupos asignados para mantener la estabilidad del host.</div>
         </div>
       </div>
 
     </section>
 
-  </main>
+    <!-- CARRUSEL DE HERRAMIENTAS TIPO MONGODB -->
+    <div class="carousel-section">
+      <div class="carousel-track">
+        <div class="carousel-item">GitHub</div>
+        <div class="carousel-item">MongoDB</div>
+        <div class="carousel-item">SKY Ultra</div>
+        <div class="carousel-item">WhatsApp</div>
+        <div class="carousel-item">Baileys</div>
+        <!-- Duplicados para el efecto infinito -->
+        <div class="carousel-item">GitHub</div>
+        <div class="carousel-item">MongoDB</div>
+        <div class="carousel-item">SKY Ultra</div>
+        <div class="carousel-item">WhatsApp</div>
+        <div class="carousel-item">Baileys</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    Desarrollado por <span>Proyecto1</span> • 2026
+  </footer>
 
   <script>
     const GITHUB_CLIENT_ID = "Ov23liMjklGcMnD5lCBV";
 
-    // ANIMACIÓN AL CARGAR LA PÁGINA (SPLASH SCREEN)
+    // ANIMACIÓN AL CARGAR (CEBOLLÍN MIKU)
     window.addEventListener("load", () => {
       setTimeout(() => {
         const splash = document.getElementById("splash-screen");
         splash.style.opacity = "0";
-        setTimeout(() => splash.style.visibility = "hidden", 600);
-      }, 1800); // 1.8 segundos de animación
+        setTimeout(() => splash.style.visibility = "hidden", 500);
+      }, 1800);
     });
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -204,20 +218,14 @@
       const githubCode = urlParams.get('code');
 
       if (githubCode) {
-        const githubUser = {
-          name: "Usuario GitHub",
-          picture: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
-        };
+        const githubUser = { name: "Usuario GitHub" };
         saveSession(githubUser);
-        // Limpia la URL eliminando el ?code= para permitir cierres de sesión limpios
         window.history.replaceState({}, document.title, window.location.pathname);
         return;
       }
 
       const storedUser = JSON.parse(localStorage.getItem("session_user"));
-      if (storedUser) {
-        showDashboard(storedUser);
-      }
+      if (storedUser) showDashboard(storedUser);
     });
 
     function loginWithGitHub() {
@@ -234,17 +242,30 @@
       document.getElementById("login-box").classList.add("hidden");
       document.getElementById("dashboard-content").classList.remove("hidden");
       document.getElementById("user-profile").classList.remove("hidden");
-
       document.getElementById("user-name").textContent = user.name;
-      document.getElementById("user-avatar").src = user.picture;
     }
 
-    // CIERRE DE SESIÓN CORREGIDO
     function logout() {
       localStorage.removeItem("session_user");
-      // Redirige limpiando cualquier parámetro residual
       window.location.href = window.location.origin + window.location.pathname;
+    }
+
+    /* CAMBIO DE APARTADOS (PESTAÑAS) */
+    function switchTab(tab) {
+      const btns = document.querySelectorAll('.tab-btn');
+      btns.forEach(b => b.classList.remove('active'));
+
+      document.getElementById('tab-general').classList.add('hidden');
+      document.getElementById('tab-planes').classList.add('hidden');
+
+      if (tab === 'general') {
+        document.getElementById('tab-general').classList.remove('hidden');
+        btns[0].classList.add('active');
+      } else {
+        document.getElementById('tab-planes').classList.remove('hidden');
+        btns[1].classList.add('active');
+      }
     }
   </script>
 </body>
-          </html>
+        </html>
