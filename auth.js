@@ -1,5 +1,5 @@
 // Reemplaza con tus IDs reales
-const GITHUB_CLIENT_ID = "TU_GITHUB_CLIENT_ID";
+const GITHUB_CLIENT_ID = "Ov23liMjklGcMnD5lCBV";
 
 // Al cargar la página, verificar si ya hay sesión guardada
 document.addEventListener("DOMContentLoaded", () => {
