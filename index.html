@@ -22,13 +22,13 @@
       display: flex; justify-content: space-between; align-items: center;
       border-bottom: 1px solid rgba(0, 229, 255, 0.2);
     }
-    .logo { display: flex; align-items: center; gap: 10px; color: #00e5ff; font-weight: 700; }
+    .logo { display: flex; align-items: center; gap: 10px; color: #00e5ff; font-weight: 700; font-size: 1.1rem; }
     .miku-dot { width: 10px; height: 10px; background-color: #00e5ff; border-radius: 50%; box-shadow: 0 0 10px #00e5ff; }
 
-    .container { width: 100%; max-width: 450px; margin-top: 50px; padding: 20px; }
+    .container { width: 100%; max-width: 500px; margin-top: 40px; padding: 20px; }
     .card {
       background: rgba(18, 24, 38, 0.85); border: 1px solid rgba(0, 229, 255, 0.2);
-      backdrop-filter: blur(10px); border-radius: 16px; padding: 30px; text-align: center;
+      backdrop-filter: blur(10px); border-radius: 16px; padding: 25px; text-align: center;
       box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
 
@@ -45,14 +45,39 @@
 
     .user-profile { display: flex; align-items: center; gap: 10px; }
     .user-profile img { width: 38px; height: 38px; border-radius: 50%; border: 2px solid #00e5ff; }
-    .btn-logout { background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; }
+    .btn-logout { background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; transition: 0.2s; }
+    .btn-logout:hover { background: #ef4444; color: white; }
 
-    .link-box {
-      background: rgba(0, 229, 255, 0.05); padding: 15px; border-radius: 8px;
-      border: 1px dashed #00e5ff; margin: 20px 0; text-align: left;
+    /* DASHBOARD GRID UI */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 20px;
     }
-    .code-container { background: #05070a; padding: 10px; border-radius: 6px; margin-top: 8px; text-align: center; }
-    code { color: #00e5ff; font-weight: bold; font-family: monospace; font-size: 1.1rem; }
+    .dash-card {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid rgba(0, 229, 255, 0.1);
+      text-align: left;
+    }
+    .dash-card h4 { font-size: 0.75rem; color: #94a3b8; margin-bottom: 5px; }
+    .dash-card .val { font-size: 1.1rem; font-weight: bold; color: #00e5ff; }
+    .status-online { color: #10b981 !important; font-size: 0.85rem !important; }
+
+    .status-banner {
+      background: rgba(0, 229, 255, 0.05);
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 15px;
+      font-size: 0.8rem;
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
     .hidden { display: none !important; }
   </style>
@@ -77,7 +102,7 @@
     <!-- LOGIN BOX -->
     <section id="login-box" class="card">
       <h2>Panel de Control 🩵</h2>
-      <p class="subtitle">Inicia sesión con tu cuenta de GitHub para continuar.</p>
+      <p class="subtitle">Inicia sesión para ingresar a tu panel web.</p>
       
       <button class="btn-github" onclick="loginWithGitHub()">
         <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor">
@@ -89,29 +114,43 @@
 
     <!-- DASHBOARD BOX -->
     <section id="dashboard-content" class="card hidden">
-      <h2>¡Hola, <span id="user-name" style="color:#00e5ff;">Usuario</span>! 👋</h2>
-      <p class="subtitle">Gestiona tu vinculación con la bot de WhatsApp.</p>
+      <h2>¡Bienvenido, <span id="user-name" style="color:#00e5ff;">Usuario</span>! 👋</h2>
+      <p class="subtitle" style="margin-bottom: 15px;">Panel general del sistema.</p>
       
-      <div class="link-box">
-        <p style="font-size:0.8rem; color:#94a3b8;">1. Copia tu código único de vinculación:</p>
-        <div class="code-container">
-          <code id="link-code">!vincular LINK-0000</code>
+      <div class="dashboard-grid">
+        <div class="dash-card">
+          <h4>Rol de usuario</h4>
+          <div class="val">Developer</div>
         </div>
-        <p style="font-size:0.75rem; color:#94a3b8; margin-top:8px;">2. Envía este comando al chat de la bot para asociar tu WhatsApp.</p>
+        <div class="dash-card">
+          <h4>Nivel</h4>
+          <div class="val">Lv. 1</div>
+        </div>
+        <div class="dash-card">
+          <h4>Estado Web</h4>
+          <div class="val status-online">● Activo</div>
+        </div>
+        <div class="dash-card">
+          <h4>Servidor</h4>
+          <div class="val">GitHub Pages</div>
+        </div>
+      </div>
+
+      <div class="status-banner">
+        <span>Sesión iniciada correctamente</span>
+        <span style="color:#00e5ff;">🩵</span>
       </div>
     </section>
 
   </main>
 
   <script>
-    // Tu Client ID de GitHub OAuth App
     const GITHUB_CLIENT_ID = "Ov23liMjklGcMnD5lCBV";
 
     document.addEventListener("DOMContentLoaded", () => {
       const urlParams = new URLSearchParams(window.location.search);
       const githubCode = urlParams.get('code');
 
-      // Si GitHub nos regresó un código tras autenticar
       if (githubCode) {
         const githubUser = {
           name: "Usuario GitHub",
@@ -122,7 +161,6 @@
         return;
       }
 
-      // Si ya existía una sesión guardada
       const storedUser = JSON.parse(localStorage.getItem("session_user"));
       if (storedUser) {
         showDashboard(storedUser);
@@ -146,10 +184,6 @@
 
       document.getElementById("user-name").textContent = user.name;
       document.getElementById("user-avatar").src = user.picture;
-
-      // Genera un código dinámico para el usuario
-      const userHash = Math.floor(1000 + Math.random() * 9000);
-      document.getElementById("link-code").textContent = `!vincular LINK-${userHash}`;
     }
 
     function logout() {
@@ -158,4 +192,4 @@
     }
   </script>
 </body>
-</html>
+            </html>
