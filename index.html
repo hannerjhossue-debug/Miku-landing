@@ -1,476 +1,237 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Miku Bot - Landing Page</title>
-  <!-- FontAwesome para Iconos -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Miku Dashboard 🩵</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <!-- Animaciones CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
   
   <style>
-    :root {
-      --primary: #39c5bb; /* Color Miku */
-      --primary-dark: #2da199;
-      --bg-dark: #0f141c;
-      --card-bg: #18202c;
-      --card-hover: #222d3e;
-      --text: #e6f1ff;
-      --text-muted: #8892b0;
-      --accent-red: #ff5555;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+    html, body { width: 100%; min-height: 100vh; background-color: #0b0e14; color: #e2e8f0; overflow-x: hidden; }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* NAVBAR RESPONSIVA */
+    .navbar {
+      width: 100%; padding: 15px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+      background: #0b0e14; position: sticky; top: 0; z-index: 100;
     }
+    .logo { display: flex; align-items: center; gap: 8px; color: #00e5ff; font-weight: 700; font-size: 1rem; }
+    .miku-dot { width: 8px; height: 8px; background-color: #00e5ff; border-radius: 50%; box-shadow: 0 0 8px #00e5ff; }
 
-    body {
-      background-color: var(--bg-dark);
-      color: var(--text);
-      overflow-x: hidden;
+    .nav-actions { display: flex; align-items: center; gap: 12px; }
+    .btn-menu-toggle { background: transparent; border: none; color: #00e5ff; font-size: 1.4rem; cursor: pointer; }
+    .btn-logout { background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; }
+
+    /* MENÚ LATERAL DESPLEGABLE (ESTILO NEKOTINA) */
+    .sidebar-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+      z-index: 200; opacity: 0; pointer-events: none; transition: 0.3s;
     }
+    .sidebar-overlay.active { opacity: 1; pointer-events: auto; }
 
-    /* Navbar */
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.2rem 2rem;
-      background: rgba(15, 20, 28, 0.9);
-      backdrop-filter: blur(10px);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      border-bottom: 1px solid rgba(57, 197, 187, 0.2);
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1.4rem;
-      font-weight: bold;
-      color: var(--primary);
-    }
-
-    nav ul {
-      display: flex;
-      list-style: none;
-      gap: 20px;
-    }
-
-    nav a {
-      color: var(--text);
-      text-decoration: none;
-      transition: 0.3s;
-    }
-
-    nav a:hover {
-      color: var(--primary);
-    }
-
-    .btn-owner {
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: #000;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .btn-owner:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 12px rgba(57, 197, 187, 0.4);
-    }
-
-    /* Hero Section */
-    .hero {
-      text-align: center;
-      padding: 4rem 1rem 2rem;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .hero h1 {
-      font-size: 2.8rem;
-      margin-bottom: 1rem;
-    }
-
-    .hero h1 span {
-      color: var(--primary);
-    }
-
-    .hero p {
-      color: var(--text-muted);
-      font-size: 1.1rem;
-      margin-bottom: 2rem;
-    }
-
-    /* Interactive Dashboard Panel Reference (Inspirado en la imagen 5) */
-    .panel-container {
-      max-width: 1000px;
-      margin: 2rem auto;
-      background: var(--card-bg);
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      display: grid;
-      grid-template-columns: 280px 1fr;
-      min-height: 450px;
-      overflow: hidden;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-    }
-
-    /* Sidebar desplegable / Secciones */
     .sidebar {
-      background: rgba(0, 0, 0, 0.2);
-      padding: 1.5rem;
-      border-right: 1px solid rgba(255, 255, 255, 0.05);
+      position: fixed; top: 0; left: -280px; width: 280px; height: 100vh;
+      background: #121826; border-right: 1px solid rgba(0, 229, 255, 0.2);
+      z-index: 201; transition: 0.3s ease; padding: 20px; display: flex; flex-direction: column;
     }
+    .sidebar.active { left: 0; }
 
-    .sidebar-category {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-muted);
-      margin-top: 1.2rem;
-      margin-bottom: 0.6rem;
-    }
+    .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+    .sidebar-close { background: transparent; border: none; color: #94a3b8; font-size: 1.2rem; cursor: pointer; }
 
-    .sidebar-menu {
-      list-style: none;
-    }
-
+    .sidebar-group { margin-bottom: 20px; }
+    .sidebar-title { font-size: 0.75rem; text-transform: uppercase; color: #64748b; font-weight: 700; margin-bottom: 10px; letter-spacing: 1px; }
     .sidebar-item {
-      padding: 10px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 5px;
-      color: var(--text-muted);
-      transition: 0.3s;
+      display: flex; align-items: center; gap: 12px; padding: 10px 12px;
+      color: #cbd5e1; text-decoration: none; border-radius: 8px; font-size: 0.9rem;
+      transition: 0.2s; cursor: pointer;
+    }
+    .sidebar-item:hover { background: rgba(0, 229, 255, 0.1); color: #00e5ff; }
+
+    /* CONTENEDOR PRINCIPAL MOBILE EXACTO */
+    .main-wrapper { width: 100%; max-width: 480px; margin: 0 auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
+
+    .card {
+      background: rgba(18, 24, 38, 0.85); border: 1px solid rgba(0, 229, 255, 0.2);
+      backdrop-filter: blur(10px); border-radius: 14px; padding: 20px; width: 100%;
     }
 
-    .sidebar-item:hover, .sidebar-item.active {
-      background: var(--primary);
-      color: #000;
-      font-weight: bold;
+    .btn-github { width: 100%; background: #24292e; color: white; border: 1px solid #00e5ff; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+
+    /* DASHBOARD METRICAS */
+    .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+    .dash-card { background: rgba(255, 255, 255, 0.02); padding: 12px; border-radius: 10px; border: 1px solid rgba(0, 229, 255, 0.1); }
+    .dash-card h4 { font-size: 0.7rem; color: #94a3b8; }
+    .dash-card .val { font-size: 1rem; font-weight: bold; color: #00e5ff; margin-top: 2px; }
+
+    /* CARRUSEL INFINITO ESTILO MONGODB */
+    .carousel-section { width: 100%; overflow: hidden; padding: 15px 0; position: relative; margin-top: 10px; }
+    .carousel-track { display: flex; width: calc(120px * 10); animation: scroll 15s linear infinite; gap: 15px; }
+    .carousel-item { width: 100px; height: 40px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 229, 255, 0.15); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; color: #cbd5e1; }
+    
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(calc(-115px * 5)); }
     }
 
-    .main-content {
-      padding: 2rem;
-    }
+    footer { text-align: center; padding: 20px; font-size: 0.75rem; color: #64748b; margin-top: auto; border-top: 1px solid rgba(255, 255, 255, 0.05); }
+    footer span { color: #00e5ff; font-weight: 600; }
 
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    /* Estilos de la Wiki y Comandos */
-    .search-box {
-      width: 100%;
-      padding: 12px 16px;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: #0f141c;
-      color: #fff;
-      margin-bottom: 1.5rem;
-    }
-
-    .cmd-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 15px;
-    }
-
-    .cmd-card {
-      background: var(--card-hover);
-      padding: 15px;
-      border-radius: 8px;
-      border-left: 3px solid var(--primary);
-    }
-
-    .cmd-card h4 {
-      color: var(--primary);
-      margin-bottom: 5px;
-    }
-
-    .cmd-card p {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-
-    /* Modales para Clave de Owner */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(5px);
-      z-index: 2000;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .modal-box {
-      background: var(--card-bg);
-      padding: 2rem;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 400px;
-      border: 1px solid var(--primary);
-      text-align: center;
-    }
-
-    .modal-box input {
-      width: 100%;
-      padding: 10px;
-      margin: 15px 0;
-      border-radius: 6px;
-      border: 1px solid #333;
-      background: #0f141c;
-      color: #fff;
-      text-align: center;
-      font-size: 1.1rem;
-    }
-
-    /* Feedback / Sugerencias Form */
-    .feedback-form textarea {
-      width: 100%;
-      height: 100px;
-      background: #0f141c;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      color: #fff;
-      padding: 10px;
-      margin: 10px 0;
-      resize: none;
-    }
-
-    .btn-submit {
-      background: var(--primary);
-      color: #000;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .panel-container {
-        grid-template-columns: 1fr;
-      }
-      .sidebar {
-        border-right: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      }
-    }
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
-  <header>
+  <!-- NAVBAR -->
+  <header class="navbar">
     <div class="logo">
-      <i class="fa-solid fa-robot"></i> Miku Bot
+      <span class="miku-dot"></span>
+      <span>Miku Dashboard</span>
     </div>
-    <nav>
-      <ul>
-        <li><a href="#panel">Explorar</a></li>
-        <li><a href="#soporte">Soporte</a></li>
-      </ul>
-    </nav>
-    <button class="btn-owner" onclick="openModal()"><i class="fa-solid fa-key"></i> Zona Owner</button>
+    <div class="nav-actions">
+      <div id="user-profile" class="hidden">
+        <button class="btn-logout" onclick="logout()">Salir</button>
+      </div>
+      <button class="btn-menu-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+    </div>
   </header>
 
-  <!-- Hero Section -->
-  <section class="hero animate__animated animate__fadeInDown">
-    <h1>El Bot Multi-Funcional <span>Elegante y Rápido</span></h1>
-    <p>Explora todos los módulos, documentación, comandos y la wiki oficial de la bot en un solo lugar.</p>
-  </section>
+  <!-- MENÚ LATERAL (ESTILO NEKOTINA) -->
+  <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo"><span class="miku-dot"></span> Miku Menu</div>
+      <button class="sidebar-close" onclick="toggleSidebar()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
 
-  <!-- Panel Desplegable Lateral + Secciones (Inspirado en la imagen 5) -->
-  <div class="panel-container animate__animated animate__fadeInUp" id="panel">
+    <div class="sidebar-group">
+      <div class="sidebar-title">Navegación</div>
+      <div class="sidebar-item" onclick="toggleSidebar()"><i class="fa-solid fa-house"></i> Inicio</div>
+      <div class="sidebar-item" onclick="toggleSidebar()"><i class="fa-solid fa-terminal"></i> Comandos</div>
+      <div class="sidebar-item" onclick="toggleSidebar()"><i class="fa-solid fa-book"></i> Documentación</div>
+    </div>
+
+    <div class="sidebar-group">
+      <div class="sidebar-title">Soporte</div>
+      <div class="sidebar-item" onclick="toggleSidebar()"><i class="fa-brands fa-whatsapp"></i> Grupo WhatsApp</div>
+      <div class="sidebar-item" onclick="toggleSidebar()"><i class="fa-solid fa-comment"></i> Feedback</div>
+    </div>
+  </aside>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <div class="main-wrapper">
     
-    <!-- Sidebar / Categorías -->
-    <div class="sidebar">
-      <div class="sidebar-category">Comunidad</div>
-      <ul class="sidebar-menu">
-        <li class="sidebar-item active" onclick="switchTab('wiki', this)">
-          <i class="fa-solid fa-book"></i> Wiki / Inicio
-        </li>
-        <li class="sidebar-item" onclick="switchTab('comandos', this)">
-          <i class="fa-solid fa-terminal"></i> Menú Comandos
-        </li>
-      </ul>
+    <!-- LOGIN CON GITHUB (SISTEMA ANTERIOR RESTAURADO) -->
+    <section id="login-box" class="card" style="text-align: center; margin-top: 20px;">
+      <h2 style="font-size: 1.2rem; margin-bottom: 5px;">Bienvenido 🩵</h2>
+      <p style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 20px;">Inicia sesión con GitHub para continuar.</p>
+      <button class="btn-github" onclick="loginWithGitHub()">
+        <svg height="18" width="18" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+        </svg>
+        Entrar con GitHub
+      </button>
+    </section>
 
-      <div class="sidebar-category">Interacción</div>
-      <ul class="sidebar-menu">
-        <li class="sidebar-item" onclick="switchTab('feedback', this)">
-          <i class="fa-solid fa-comment-dots"></i> Feedback & Ideas
-        </li>
-        <li class="sidebar-item" onclick="switchTab('soporte', this)">
-          <i class="fa-solid fa-headset"></i> Soporte & Redes
-        </li>
-      </ul>
-    </div>
-
-    <!-- Contenido Principal Dinámico -->
-    <div class="main-content">
+    <!-- DASHBOARD PANEL (SOLO VISIBLE CON SESIÓN INICIADA) -->
+    <section id="dashboard-content" class="card hidden">
+      <h3 style="font-size: 1rem;">Hola, <span id="user-name" style="color:#00e5ff;">Dev</span> 👋</h3>
+      <p style="font-size: 0.75rem; color: #94a3b8;">Estado de la instancia y control general.</p>
       
-      <!-- TAB 1: WIKI -->
-      <div id="wiki" class="tab-content active">
-        <h2><i class="fa-solid fa-book"></i> Wiki Oficial</h2>
-        <p style="color: var(--text-muted); margin-top: 10px;">
-          Bienvenido a la guía de Miku Bot. Aquí aprenderás a sacarle el máximo provecho a cada función.
-        </p>
-        <div style="margin-top: 20px;">
-          <div class="cmd-card" style="margin-bottom: 10px;">
-            <h4>¿Cómo usar la bot?</h4>
-            <p>Solo añade la bot a tu grupo de WhatsApp y escribe <code>.menu</code> para empezar.</p>
-          </div>
-          <div class="cmd-card">
-            <h4>Sistemas Automáticos</h4>
-            <p>Detección de enlaces, bienvenida personalizada y moderación automática sin esfuerzo.</p>
-          </div>
+      <div class="dashboard-grid">
+        <div class="dash-card">
+          <h4>Rol de usuario</h4>
+          <div class="val">Owner / Dev</div>
+        </div>
+        <div class="dash-card">
+          <h4>Ping Servidor</h4>
+          <div class="val" style="color: #10b981;">42 ms</div>
+        </div>
+        <div class="dash-card">
+          <h4>Comandos</h4>
+          <div class="val">1,248</div>
+        </div>
+        <div class="dash-card">
+          <h4>Estado</h4>
+          <div class="val" style="color: #10b981;">Online</div>
         </div>
       </div>
+    </section>
 
-      <!-- TAB 2: COMANDOS -->
-      <div id="comandos" class="tab-content">
-        <h2><i class="fa-solid fa-terminal"></i> Menú de Comandos</h2>
-        <input type="text" class="search-box" id="cmdSearch" placeholder="Buscar comando (ej. sticker, ban, play)..." onkeyup="filterCommands()" />
-        
-        <div class="cmd-grid" id="cmdGrid">
-          <div class="cmd-card" data-name="sticker">
-            <h4>.sticker / .s</h4>
-            <p>Convierte imágenes o videos cortos en stickers.</p>
-          </div>
-          <div class="cmd-card" data-name="play">
-            <h4>.play [nombre]</h4>
-            <p>Descarga música desde distintas fuentes rápidamente.</p>
-          </div>
-          <div class="cmd-card" data-name="kick">
-            <h4>.kick @user</h4>
-            <p>Elimina a un usuario del grupo (solo admins).</p>
-          </div>
-          <div class="cmd-card" data-name="ping">
-            <h4>.ping</h4>
-            <p>Muestra el estado y velocidad de respuesta de la bot.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB 3: FEEDBACK Y SUGERENCIAS -->
-      <div id="feedback" class="tab-content">
-        <h2><i class="fa-solid fa-comment-dots"></i> Déjanos tu Feedback / Sugerencia</h2>
-        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 5px;">
-          ¿Tienes alguna idea para un nuevo comando o encontraste un fallo? Escríbelo abajo.
-        </p>
-        <form class="feedback-form" style="margin-top: 15px;" onsubmit="sendFeedback(event)">
-          <textarea id="feedbackText" placeholder="Escribe tu mensaje, opinión o recomendación..." required></textarea>
-          <button type="submit" class="btn-submit">Enviar Comentario</button>
-        </form>
-      </div>
-
-      <!-- TAB 4: SOPORTE Y REDES -->
-      <div id="soporte" class="tab-content">
-        <h2><i class="fa-solid fa-headset"></i> Soporte & Redes Sociales</h2>
-        <p style="color: var(--text-muted); margin-top: 10px; margin-bottom: 20px;">
-          Si necesitas ayuda directa, contáctanos a través de nuestras vías oficiales:
-        </p>
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-          <a href="#" style="color: var(--primary); text-decoration: none;"><i class="fa-brands fa-whatsapp"></i> Grupo Oficial de WhatsApp</a>
-          <a href="#" style="color: var(--primary); text-decoration: none;"><i class="fa-brands fa-github"></i> Repositorio de GitHub</a>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Modal con Protección de Clave para Owners -->
-  <div class="modal" id="ownerModal">
-    <div class="modal-box animate__animated animate__zoomIn">
-      <h3><i class="fa-solid fa-lock"></i> Acceso Privado Owner</h3>
-      <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 8px;">
-        Esta área es restringida. Ingresa la clave de acceso.
-      </p>
-      <input type="password" id="ownerPass" placeholder="••••••••" />
-      <div style="display: flex; gap: 10px; justify-content: center;">
-        <button class="btn-submit" onclick="verifyPassword()">Ingresar</button>
-        <button class="btn-submit" style="background: #333; color: #fff;" onclick="closeModal()">Cancelar</button>
+    <!-- CARRUSEL DE HERRAMIENTAS (ESTILO MONGODB) -->
+    <div class="carousel-section">
+      <div class="carousel-track">
+        <div class="carousel-item">GitHub</div>
+        <div class="carousel-item">MongoDB</div>
+        <div class="carousel-item">SKY Ultra</div>
+        <div class="carousel-item">WhatsApp</div>
+        <div class="carousel-item">Baileys</div>
+        <!-- Duplicados -->
+        <div class="carousel-item">GitHub</div>
+        <div class="carousel-item">MongoDB</div>
+        <div class="carousel-item">SKY Ultra</div>
+        <div class="carousel-item">WhatsApp</div>
+        <div class="carousel-item">Baileys</div>
       </div>
     </div>
+
   </div>
+
+  <!-- FOOTER -->
+  <footer>
+    Desarrollado por <span>Proyecto1</span>
+  </footer>
 
   <script>
-    // Cambiar de Pestañas (Tabs) estilo Dashboard
-    function switchTab(tabId, element) {
-      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-      document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
-      
-      document.getElementById(tabId).classList.add('active');
-      element.classList.add('active');
-    }
+    const GITHUB_CLIENT_ID = "Ov23liMjklGcMnD5lCBV";
 
-    // Buscador de Comandos en tiempo real
-    function filterCommands() {
-      let input = document.getElementById('cmdSearch').value.toLowerCase();
-      let cards = document.querySelectorAll('#cmdGrid .cmd-card');
+    // LÓGICA DE SESIÓN (RESTAURADA)
+    document.addEventListener("DOMContentLoaded", () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const githubCode = urlParams.get('code');
 
-      cards.forEach(card => {
-        let name = card.getAttribute('data-name').toLowerCase();
-        let text = card.innerText.toLowerCase();
-        if (name.includes(input) || text.includes(input)) {
-          card.style.display = 'block';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    }
-
-    // Sistema de Modal / Clave para Owner
-    function openModal() {
-      document.getElementById('ownerModal').style.display = 'flex';
-    }
-
-    function closeModal() {
-      document.getElementById('ownerModal').style.display = 'none';
-      document.getElementById('ownerPass').value = '';
-    }
-
-    function verifyPassword() {
-      const pass = document.getElementById('ownerPass').value;
-      // Puedes cambiar "1234" por tu clave personal de Owner
-      if (pass === "1234") {
-        alert("¡Acceso Concedido, Bienvenida/o Owner!");
-        closeModal();
-        // Aquí podrás redirigir o desbloquear las métricas privadas cuando las integres
-      } else {
-        alert("Clave incorrecta. Acceso denegado.");
+      if (githubCode) {
+        const githubUser = { name: "Usuario GitHub" };
+        saveSession(githubUser);
+        window.history.replaceState({}, document.title, window.location.pathname);
+        return;
       }
+
+      const storedUser = JSON.parse(localStorage.getItem("session_user"));
+      if (storedUser) showDashboard(storedUser);
+    });
+
+    function loginWithGitHub() {
+      const redirectUri = window.location.href.split('?')[0];
+      window.location.href = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${redirectUri}&prompt=consent`;
     }
 
-    // Manejador del Feedback
-    function sendFeedback(e) {
-      e.preventDefault();
-      const msg = document.getElementById('feedbackText').value;
-      alert("¡Gracias por tu comentario! Se ha guardado tu recomendación.");
-      document.getElementById('feedbackText').value = '';
+    function saveSession(userData) {
+      localStorage.setItem("session_user", JSON.stringify(userData));
+      showDashboard(userData);
+    }
+
+    function showDashboard(user) {
+      document.getElementById("login-box").classList.add("hidden");
+      document.getElementById("dashboard-content").classList.remove("hidden");
+      document.getElementById("user-profile").classList.remove("hidden");
+      document.getElementById("user-name").textContent = user.name;
+    }
+
+    function logout() {
+      localStorage.removeItem("session_user");
+      window.location.href = window.location.origin + window.location.pathname;
+    }
+
+    // MENÚ LATERAL TOGGLE
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("active");
+      document.getElementById("overlay").classList.toggle("active");
     }
   </script>
 </body>
-    </html>
+  </html>
