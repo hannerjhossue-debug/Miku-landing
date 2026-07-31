@@ -66,7 +66,16 @@
     .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
     .dash-card { background: rgba(255, 255, 255, 0.02); padding: 12px; border-radius: 10px; border: 1px solid rgba(0, 229, 255, 0.1); }
     .dash-card h4 { font-size: 0.7rem; color: #94a3b8; }
-    .dash-card .val { font-size: 1rem; font-weight: bold; color: #00e5ff; margin-top: 2px; }
+    .dash-card .val { font-size: 0.95rem; font-weight: bold; color: #00e5ff; margin-top: 2px; }
+
+    /* SECCIÓN REDES SOCIALES */
+    .social-grid { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+    .social-btn {
+      flex: 1; min-width: 45%; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 229, 255, 0.2);
+      border-radius: 8px; padding: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;
+      color: #cbd5e1; text-decoration: none; font-size: 0.8rem; font-weight: 600; transition: 0.2s;
+    }
+    .social-btn:hover { background: rgba(0, 229, 255, 0.15); color: #00e5ff; }
 
     /* CARRUSEL INFINITO */
     .carousel-section { width: 100%; overflow: hidden; padding: 15px 0; position: relative; margin-top: 10px; }
@@ -96,10 +105,24 @@
     .btn-send { background: #00e5ff; color: #0b0e14; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; }
     .btn-cancel { background: transparent; color: #94a3b8; border: 1px solid #64748b; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
 
-    /* SECCIÓN FEEDBACK RECIBIDO (SOLO OWNER) */
-    .feedback-item { background: rgba(255, 255, 255, 0.02); border-left: 3px solid #00e5ff; padding: 10px; margin-top: 8px; border-radius: 4px; }
+    /* NOTIFICACIÓN PERSONALIZADA (REEMPLAZO DE ALERT GOOGLE) */
+    .custom-toast {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      background: #00e5ff; color: #0b0e14; padding: 10px 20px; border-radius: 20px;
+      font-size: 0.8rem; font-weight: bold; box-shadow: 0 4px 15px rgba(0,229,255,0.4);
+      z-index: 400; opacity: 0; transition: 0.3s; pointer-events: none;
+    }
+    .custom-toast.show { opacity: 1; }
+
+    /* FEEDBACK ITEM CON BOTÓN ELIMINAR */
+    .feedback-item { 
+      background: rgba(255, 255, 255, 0.02); border-left: 3px solid #00e5ff; 
+      padding: 10px; margin-top: 8px; border-radius: 4px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
     .feedback-user { font-size: 0.75rem; color: #00e5ff; font-weight: bold; }
     .feedback-text { font-size: 0.8rem; color: #cbd5e1; margin-top: 2px; }
+    .btn-delete-fb { background: transparent; border: none; color: #ef4444; cursor: pointer; font-size: 0.85rem; padding: 4px; }
 
     footer { text-align: center; padding: 20px; font-size: 0.75rem; color: #64748b; margin-top: auto; border-top: 1px solid rgba(255, 255, 255, 0.05); }
     footer span { color: #00e5ff; font-weight: 600; }
@@ -140,11 +163,9 @@
 
     <div class="sidebar-group">
       <div class="sidebar-title">Soporte</div>
-      <!-- LINK A TU GRUPO DE WHATSAPP -->
-      <a class="sidebar-item" href="https://chat.whatsapp.com/IxMNMtgnoSNH3wxHIdiXGB" target="_blank" onclick="toggleSidebar()">
+      <a class="sidebar-item" href="https://chat.whatsapp.com/TU_CODIGO_DE_GRUPO" target="_blank" onclick="toggleSidebar()">
         <i class="fa-brands fa-whatsapp"></i> Grupo WhatsApp
       </a>
-      <!-- BOTÓN FEEDBACK -->
       <div class="sidebar-item" onclick="openFeedbackModal(); toggleSidebar();">
         <i class="fa-solid fa-comment"></i> Feedback
       </div>
@@ -174,7 +195,7 @@
       <div class="dashboard-grid">
         <div class="dash-card">
           <h4>Rol de usuario</h4>
-          <div class="val">Owner / Dev</div>
+          <div class="val" id="user-role">Miembro</div>
         </div>
         <div class="dash-card">
           <h4>Ping Servidor</h4>
@@ -190,12 +211,29 @@
         </div>
       </div>
 
-      <!-- BANDEJA DE FEEDBACKS RECIBIDOS (SOLO PARA TI) -->
-      <div style="margin-top: 20px; border-top: 1px solid rgba(0,229,255,0.2); padding-top: 15px;">
-        <h4 style="font-size: 0.85rem; color: #00e5ff;"><i class="fa-solid fa-inbox"></i> Feedbacks Recibidos</h4>
-        <div id="feedback-list" style="max-height: 150px; overflow-y: auto; margin-top: 8px;">
-          <!-- Se cargan dinámicamente -->
+      <!-- SECCIÓN REDES SOCIALES Y REPOSITORIO -->
+      <div style="margin-top: 15px; border-top: 1px solid rgba(0,229,255,0.1); padding-top: 12px;">
+        <h4 style="font-size: 0.8rem; color: #94a3b8;">Comunidad y Código</h4>
+        <div class="social-grid">
+          <a class="social-btn" href="https://github.com/hannerjhossue-debug/Proyecto1" target="_blank">
+            <i class="fa-brands fa-github"></i> Repositorio
+          </a>
+          <a class="social-btn" href="https://chat.whatsapp.com/TU_GRUPO" target="_blank">
+            <i class="fa-brands fa-whatsapp"></i> WhatsApp
+          </a>
+          <a class="social-btn" href="https://youtube.com" target="_blank">
+            <i class="fa-brands fa-youtube"></i> YouTube
+          </a>
+          <a class="social-btn" href="https://discord.com" target="_blank">
+            <i class="fa-brands fa-discord"></i> Discord
+          </a>
         </div>
+      </div>
+
+      <!-- BANDEJA DE FEEDBACKS -->
+      <div style="margin-top: 15px; border-top: 1px solid rgba(0,229,255,0.2); padding-top: 12px;">
+        <h4 style="font-size: 0.85rem; color: #00e5ff;"><i class="fa-solid fa-inbox"></i> Feedbacks Recibidos</h4>
+        <div id="feedback-list" style="max-height: 150px; overflow-y: auto; margin-top: 8px;"></div>
       </div>
     </section>
 
@@ -230,6 +268,9 @@
     </div>
   </div>
 
+  <!-- TOAST PERSONALIZADO -->
+  <div id="toast" class="custom-toast">¡Mensaje enviado con éxito! 🩵</div>
+
   <!-- FOOTER -->
   <footer>
     Desarrollado por <span>Proyecto1</span>
@@ -243,6 +284,7 @@
       const githubCode = urlParams.get('code');
 
       if (githubCode) {
+        // Al iniciar sesión, asignamos el nombre de usuario
         const githubUser = { name: "hannerjhossue-debug" };
         saveSession(githubUser);
         window.history.replaceState({}, document.title, window.location.pathname);
@@ -268,6 +310,15 @@
       document.getElementById("dashboard-content").classList.remove("hidden");
       document.getElementById("user-profile").classList.remove("hidden");
       document.getElementById("user-name").textContent = user.name;
+
+      // LÓGICA DE ROLES: Define Owner si coincide con tu usuario, o Usuario por defecto
+      const roleElement = document.getElementById("user-role");
+      if (user.name.toLowerCase().includes("hannerjhossue") || user.name === "Owner") {
+        roleElement.textContent = "Owner / Dev";
+      } else {
+        roleElement.textContent = "Usuario / Miembro";
+      }
+
       loadFeedbacks();
     }
 
@@ -291,18 +342,33 @@
       document.getElementById("feedback-text").value = "";
     }
 
+    function showToast(msg) {
+      const toast = document.getElementById("toast");
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3000);
+    }
+
     function submitFeedback() {
       const text = document.getElementById("feedback-text").value.trim();
-      if (!text) return alert("Por favor escribe un mensaje.");
+      if (!text) return;
 
       const currentUser = JSON.parse(localStorage.getItem("session_user")) || { name: "Anónimo" };
       const feedbacks = JSON.parse(localStorage.getItem("miku_feedbacks")) || [];
 
-      feedbacks.push({ user: currentUser.name, text: text, date: new Date().toLocaleDateString() });
+      feedbacks.push({ id: Date.now(), user: currentUser.name, text: text, date: new Date().toLocaleDateString() });
       localStorage.setItem("miku_feedbacks", JSON.stringify(feedbacks));
 
-      alert("¡Feedback enviado con éxito!");
       closeFeedbackModal();
+      showToast("¡Feedback enviado con éxito! 🩵");
+      loadFeedbacks();
+    }
+
+    function deleteFeedback(id) {
+      let feedbacks = JSON.parse(localStorage.getItem("miku_feedbacks")) || [];
+      feedbacks = feedbacks.filter(item => item.id !== id);
+      localStorage.setItem("miku_feedbacks", JSON.stringify(feedbacks));
+      showToast("Comentario eliminado 🗑️");
       loadFeedbacks();
     }
 
@@ -317,11 +383,14 @@
 
       listContainer.innerHTML = feedbacks.map(item => `
         <div class="feedback-item">
-          <div class="feedback-user">${item.user} <span style="font-weight:normal; color:#64748b; font-size:0.65rem;">(${item.date})</span></div>
-          <div class="feedback-text">${item.text}</div>
+          <div>
+            <div class="feedback-user">${item.user} <span style="font-weight:normal; color:#64748b; font-size:0.65rem;">(${item.date})</span></div>
+            <div class="feedback-text">${item.text}</div>
+          </div>
+          <button class="btn-delete-fb" onclick="deleteFeedback(${item.id})" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
         </div>
       `).join('');
     }
   </script>
 </body>
-    </html>
+  </html>
