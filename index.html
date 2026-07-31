@@ -1,312 +1,62 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hatsune Miku - Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --bg-dark: #0f172a;
-            --card-bg: #1e293b;
-            --accent-cyan: #38bdf8;
-            --text-main: #f8fafc;
-            --text-sub: #94a3b8;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 480px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        h2 {
-            margin-top: 0;
-            font-size: 1.25rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--accent-cyan);
-        }
-
-        .toggle-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .toggle-title {
-            font-weight: 600;
-            font-size: 0.95rem;
-            display: block;
-        }
-
-        .toggle-desc {
-            font-size: 0.8rem;
-            color: var(--text-sub);
-        }
-
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 46px;
-            height: 24px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #334155;
-            transition: .3s;
-            border-radius: 24px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .3s;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider {
-            background-color: var(--accent-cyan);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(22px);
-        }
-
-        .btn-save {
-            width: 100%;
-            background: linear-gradient(135deg, var(--accent-cyan), #0284c7);
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 10px;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: opacity 0.2s;
-        }
-
-        .btn-save:hover {
-            opacity: 0.9;
-        }
-
-        #mensajeFeedback {
-            margin-top: 14px;
-            font-size: 0.85rem;
-            text-align: center;
-            min-height: 20px;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: bold;
-        }
-
-        .badge-active { background-color: rgba(16, 185, 129, 0.2); color: #10b981; }
-        .badge-off { background-color: rgba(239, 68, 68, 0.2); color: #ef4444; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Bot</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- SDK de Google para Login -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
-<div class="container">
-    <div class="card">
-        <h2><i class="fa-solid fa-sliders"></i> Control General del Bot</h2>
-
-        <div class="toggle-container">
-            <div>
-                <span class="toggle-title">Encender / Apagar Bot</span>
-                <span class="toggle-desc">Habilita o deshabilita los comandos</span>
-            </div>
-            <label class="switch">
-                <input type="checkbox" id="toggleBot" checked>
-                <span class="slider"></span>
-            </label>
-        </div>
-
-        <div class="toggle-container">
-            <div>
-                <span class="toggle-title">Filtro Anti-Enlaces (AntiLinks)</span>
-                <span class="toggle-desc">Borra automáticamente los links en el chat</span>
-            </div>
-            <label class="switch">
-                <input type="checkbox" id="toggleAntiLinks">
-                <span class="slider"></span>
-            </label>
-        </div>
-
-        <button class="btn-save" onclick="guardarConfiguracion()">
-            <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios
-        </button>
-
-        <div id="mensajeFeedback"></div>
+  <header>
+    <h1>Bot Dashboard 🩵</h1>
+    <div id="user-profile" class="hidden">
+      <img id="user-avatar" src="" alt="Avatar">
+      <span id="user-name"></span>
+      <button onclick="logout()">Cerrar Sesión</button>
     </div>
+  </header>
 
-    <div class="card">
-        <h2><i class="fa-solid fa-list-check"></i> Estado Actual</h2>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div>
-                <strong>Hatsune Miku Bot</strong><br>
-                <small style="color: var(--text-sub);">Sincronización Web</small>
-            </div>
-            <span id="badgeEstadoGrupo" class="status-badge badge-active">ACTIVO</span>
-        </div>
-    </div>
-</div>
+  <main>
+    <!-- Modal / Caja de Login -->
+    <section id="login-box" class="card">
+      <h2>Iniciar Sesión</h2>
+      <p>Selecciona una opción para acceder a tu panel de control:</p>
+      
+      <!-- Botón de Google -->
+      <div id="g_id_onload"
+        data-client_id="TU_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
+        data-callback="handleGoogleLogin">
+      </div>
+      <div class="g_id_signin" data-type="standard"></div>
 
-    <!-- Panel de Anuncios -->
-<div style="background: #1e1f29; padding: 20px; border-radius: 12px; color: white; max-width: 400px;">
-    <h3>📢 Enviar Aviso a WhatsApp</h3>
-    <input type="text" id="chatIdInput" placeholder="ID del grupo o número (ej: 120338...@g.us)" style="width: 100%; margin-bottom: 10px; padding: 8px;">
-    <textarea id="mensajeInput" placeholder="Escribe tu mensaje aquí..." style="width: 100%; height: 80px; margin-bottom: 10px; padding: 8px;"></textarea>
-    <button onclick="enviarAviso()" style="background: #00b4d8; color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; width: 100%;">🚀 Enviar a WhatsApp</button>
-</div>
+      <br>
 
-<script>
-async function enviarAviso() {
-    const chatId = document.getElementById('chatIdInput').value;
-    const mensaje = document.getElementById('mensajeInput').value;
+      <!-- Botón de GitHub -->
+      <button class="btn-github" onclick="loginWithGitHub()">
+        <svg height="20" width="20" viewBox="0 0 16 16" fill="white">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+        </svg>
+        Iniciar sesión con GitHub
+      </button>
+    </section>
 
-    if (!chatId || !mensaje) return alert('Llena ambos campos');
+    <!-- Contenido del Dashboard (Oculto hasta iniciar sesión) -->
+    <section id="dashboard-content" class="card hidden">
+      <h2>¡Bienvenido al Panel de Control!</h2>
+      <p>Aún no has vinculado tu cuenta con WhatsApp.</p>
+      
+      <!-- Paso de Vinculación Segura con WhatsApp -->
+      <div class="link-whatsapp-box">
+        <h3>Vincular con tu WhatsApp</h3>
+        <p>Envía el siguiente comando al chat de la bot para asociar tu perfil:</p>
+        <code id="link-code">!vincular LINK-XXXX</code>
+      </div>
+    </section>
+  </main>
 
-    const res = await fetch('/api/enviar-anuncio', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chatId, mensaje })
-    });
-
-    const data = await res.json();
-    alert(data.message);
-}
-</script>
-    
-<script>
-    const BIN_URL = 'https://api.jsonbin.io/v3/b/6a6bb0d1f5f4af5e29d75982';
-    
-    // Al abrir la página, te pedirá tu Master Key una sola vez y la guardará segura en tu teléfono
-    let MASTER_KEY = localStorage.getItem('miku_jsonbin_key');
-
-    if (!MASTER_KEY) {
-        MASTER_KEY = prompt('Ingresa tu X-Master-Key de JSONBin (se guardará en tu navegador):');
-        if (MASTER_KEY) {
-            localStorage.setItem('miku_jsonbin_key', MASTER_KEY.trim());
-        }
-    }
-
-    // Cargar estado inicial desde JSONBin al abrir la web
-    async function cargarEstadoInicial() {
-        if (!MASTER_KEY) return;
-        try {
-            const res = await fetch(`${BIN_URL}/latest`, {
-                headers: { 'X-Master-Key': MASTER_KEY }
-            });
-            if (res.ok) {
-                const data = await res.json();
-                const config = data.record;
-                
-                document.getElementById('toggleBot').checked = config.botActivo !== false;
-                document.getElementById('toggleAntiLinks').checked = config.antiLinks === true;
-                actualizarBadge(config.botActivo !== false);
-            }
-        } catch (e) {
-            console.error('Error al cargar datos iniciales:', e);
-        }
-    }
-
-    function actualizarBadge(activo) {
-        const badge = document.getElementById('badgeEstadoGrupo');
-        if (activo) {
-            badge.className = 'status-badge badge-active';
-            badge.innerText = 'ACTIVO';
-        } else {
-            badge.className = 'status-badge badge-off';
-            badge.innerText = 'APAGADO';
-        }
-    }
-
-    async function guardarConfiguracion() {
-        if (!MASTER_KEY) {
-            alert('Necesitas ingresar tu Master Key para guardar.');
-            return;
-        }
-
-        const botActivo = document.getElementById('toggleBot').checked;
-        const antiLinks = document.getElementById('toggleAntiLinks').checked;
-        const feedback = document.getElementById('mensajeFeedback');
-
-        feedback.style.color = 'var(--accent-cyan)';
-        feedback.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando cambios...';
-
-        try {
-            const res = await fetch(BIN_URL, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Master-Key': MASTER_KEY
-                },
-                body: JSON.stringify({
-                    botActivo: botActivo,
-                    antiLinks: antiLinks
-                })
-            });
-
-            if (res.ok) {
-                feedback.style.color = '#10b981';
-                feedback.innerText = '✅ ¡Cambios guardados con éxito!';
-                actualizarBadge(botActivo);
-            } else {
-                throw new Error('Error en la API');
-            }
-        } catch (err) {
-            console.error(err);
-            feedback.style.color = '#ef4444';
-            feedback.innerText = '❌ Error al guardar. Revisa tu Master Key.';
-        }
-    }
-
-    // Ejecutar carga inicial
-    cargarEstadoInicial();
-</script>
-
+  <script src="auth.js"></script>
 </body>
-            </html>
+</html>
